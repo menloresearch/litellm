@@ -1,0 +1,2 @@
+general_settings:
+  custom_sso: custom_sso.custom_sso_handler
