@@ -8141,9 +8141,10 @@ async def get_litellm_model_cost_map():
         )
 
 
-@router.get("/")
+@router.get("/", dependencies=[Depends(user_api_key_auth)])
 async def home(request: Request):
-    return RedirectResponse(url="/fallback/login")
+    return "LiteLLM: RUNNING"
+
 
 @router.get("/routes", dependencies=[Depends(user_api_key_auth)])
 async def get_routes():
