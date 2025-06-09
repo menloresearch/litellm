@@ -11,8 +11,6 @@ services:
     volumes:
      - ./config.yaml:/app/config.yaml
      - ./custom_sso.py:/app/custom_sso.py
-     - ./litellm:/app/litellm  # Mount local litellm code for instant updates
-     - ./ui/litellm-dashboard:/app/ui/litellm-dashboard  # Mount UI code
     command:
      - "--config=/app/config.yaml"
     ##############################################
@@ -41,7 +39,7 @@ services:
       POSTGRES_USER: llmproxy
       POSTGRES_PASSWORD: dbpassword9090
     ports:
-      - "5433:5432" # Changed to 5433 to avoid conflict with default port
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data # Persists Postgres data across container restarts
     healthcheck:
