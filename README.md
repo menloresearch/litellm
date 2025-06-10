@@ -400,18 +400,18 @@ If you have suggestions on how to improve the code quality feel free to open an 
 ## Run in Developer mode
 ### Services
 1. Setup .env file in root
-2. Run dependant services `docker compose up db prometheus`
+2. Run dependant services `docker compose up db prometheus -d`
 
 ### Frontend
 1. Navigate to `ui/litellm-dashboard`
 2. Install dependencies `npm install`
-3. Run `npm run dev` to start the dashboard
+3. Run `npm run dev` to start the dashboard at `localhost:3000`
 
 ### Backend
-1. Create virtual environment `python -m venv .venv`
-2. Activate virtual environment `source .venv/bin/activate`
-3. Install dependencies `pip install -e ".[proxy]"`
-4. Install extra dependencies `pip install -r requirements.txt`
-5. `prisma generate`
-5. Set `DATABASE_URL=postgresql://llmproxy:dbpassword9090@localhost:5432/litellm`
-6. Start proxy backend `uvicorn litellm.proxy.proxy_server:app --host localhost --port 4000 --reload`
+1. Create virtual environment `uv venv --python=3.13` and `source .venv/bin/activate`
+2. Install the proxy and extra dependencies `uv pip install -e ".[proxy]"` and `uv pip install -r requirements.txt`
+3. Run `prisma generate`
+4. Set `DATABASE_URL=postgresql://llmproxy:dbpassword9090@localhost:5432/litellm` (from `docker-compose.yml`)
+5. Start proxy backend `uvicorn litellm.proxy.proxy_server:app --host localhost --port 4000 --reload` at `localhost:4000`
+
+Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at backend e.g. `localhost:4000/fallback/login`.
