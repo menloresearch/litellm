@@ -327,8 +327,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
     clearTokenCookies();
     
     const url = proxyBaseUrl
-      ? `${proxyBaseUrl}/sso/key/generate`
-      : `/sso/key/generate`;
+      ? `${proxyBaseUrl}/login`
+      : `/login`;
 
     console.log("Full URL:", url);
     window.location.href = url; 
@@ -358,8 +358,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
         clearTokenCookies();
         
         const url = proxyBaseUrl
-          ? `${proxyBaseUrl}/sso/key/generate`
-          : `/sso/key/generate`;
+          ? `${proxyBaseUrl}/login`
+          : `/login`;
         
         console.log("Full URL for expired token:", url);
         window.location.href = url;
@@ -372,8 +372,8 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
       clearTokenCookies();
       
       const url = proxyBaseUrl
-        ? `${proxyBaseUrl}/sso/key/generate`
-        : `/sso/key/generate`;
+        ? `${proxyBaseUrl}/login`
+        : `/login`;
       
       console.log("Full URL after token decode error:", url);
       window.location.href = url;
