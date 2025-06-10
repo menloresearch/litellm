@@ -414,4 +414,4 @@ If you have suggestions on how to improve the code quality feel free to open an 
 4. Set `DATABASE_URL=postgresql://llmproxy:dbpassword9090@localhost:5432/litellm` (from `docker-compose.yml`)
 5. Start proxy backend `uvicorn litellm.proxy.proxy_server:app --host localhost --port 4000 --reload` at `localhost:4000`
 
-Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at backend e.g. `localhost:4000/fallback/login`.
+Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at backend e.g. `localhost:4000/login`.
