@@ -6668,7 +6668,7 @@ async def async_queue_request(
         )
 
 
-@app.get("/fallback/login", tags=["experimental"], include_in_schema=False)
+@app.get("/login", tags=["experimental"], include_in_schema=False)
 async def fallback_login(request: Request):
     """
     Create Proxy API Keys using Google Workspace SSO. Requires setting PROXY_BASE_URL in .env
