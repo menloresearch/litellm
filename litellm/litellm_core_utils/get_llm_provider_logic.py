@@ -506,6 +506,14 @@ def _get_openai_compatible_provider_info(  # noqa: PLR0915
         ) = litellm.HostedVLLMChatConfig()._get_openai_compatible_provider_info(
             api_base, api_key
         )
+    elif custom_llm_provider == "qwen3_no_think":
+        # vllm is openai compatible, we just need to set this to custom_openai
+        (
+            api_base,
+            dynamic_api_key,
+        ) = litellm.Qwen3NoThinkConfig()._get_openai_compatible_provider_info(
+            api_base, api_key
+        )
     elif custom_llm_provider == "llamafile":
         # llamafile is OpenAI compatible.
         (

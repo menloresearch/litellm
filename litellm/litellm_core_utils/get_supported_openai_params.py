@@ -88,6 +88,8 @@ def get_supported_openai_params(  # noqa: PLR0915
         return litellm.GroqChatConfig().get_supported_openai_params(model=model)
     elif custom_llm_provider == "hosted_vllm":
         return litellm.HostedVLLMChatConfig().get_supported_openai_params(model=model)
+    elif custom_llm_provider == "qwen3_no_think":
+        return litellm.Qwen3NoThinkConfig().get_supported_openai_params(model=model)
     elif custom_llm_provider == "vllm":
         return litellm.VLLMConfig().get_supported_openai_params(model=model)
     elif custom_llm_provider == "deepseek":

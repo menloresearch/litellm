@@ -3525,6 +3525,17 @@ def get_optional_params(  # noqa: PLR0915
                 else False
             ),
         )
+    elif custom_llm_provider == "qwen3_no_think":
+        optional_params = litellm.Qwen3NoThinkConfig().map_openai_params(
+            non_default_params=non_default_params,
+            optional_params=optional_params,
+            model=model,
+            drop_params=(
+                drop_params
+                if drop_params is not None and isinstance(drop_params, bool)
+                else False
+            ),
+        )
     elif custom_llm_provider == "vllm":
         optional_params = litellm.VLLMConfig().map_openai_params(
             non_default_params=non_default_params,
@@ -6470,6 +6481,8 @@ class ProviderConfigManager:
             return litellm.AiohttpOpenAIChatConfig()
         elif litellm.LlmProviders.HOSTED_VLLM == provider:
             return litellm.HostedVLLMChatConfig()
+        elif litellm.LlmProviders.QWEN3_NO_THINK == provider:
+            return litellm.Qwen3NoThinkConfig()
         elif litellm.LlmProviders.LLAMAFILE == provider:
             return litellm.LlamafileChatConfig()
         elif litellm.LlmProviders.LM_STUDIO == provider:
