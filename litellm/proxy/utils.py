@@ -2778,18 +2778,9 @@ def _get_docs_url() -> Optional[str]:
     Get the docs URL from the environment variables.
 
     - If DOCS_URL is set, return it.
-    - If NO_DOCS is True, return None.
-    - Otherwise, default to "/".
+    - Otherwise, default to "/swagger".
     """
-    docs_url = os.getenv("DOCS_URL", None)
-    if docs_url:
-        return docs_url
-
-    if os.getenv("NO_DOCS", "False") == "True":
-        return None
-
-    # default to "/"
-    return "/"
+    return os.getenv("DOCS_URL", "/swagger")
 
 
 def handle_exception_on_proxy(e: Exception) -> ProxyException:
