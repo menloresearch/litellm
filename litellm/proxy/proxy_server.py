@@ -7141,34 +7141,13 @@ async def claim_onboarding_link(data: InvitationClaim):
 
 @app.get("/get_image", include_in_schema=False)
 def get_image():
-    """Get logo to show on admin UI"""
-
-    # get current_dir
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    default_logo = os.path.join(current_dir, "logo.jpg")
-
-    logo_path = os.getenv("UI_LOGO_PATH", default_logo)
-    verbose_proxy_logger.debug("Reading logo from path: %s", logo_path)
-
-    # Check if the logo path is an HTTP/HTTPS URL
-    if logo_path.startswith(("http://", "https://")):
-        # Download the image and cache it
-        client = HTTPHandler()
-        response = client.get(logo_path)
-        if response.status_code == 200:
-            # Save the image to a local file
-            cache_path = os.path.join(current_dir, "cached_logo.jpg")
-            with open(cache_path, "wb") as f:
-                f.write(response.content)
-
-            # Return the cached image as a FileResponse
-            return FileResponse(cache_path, media_type="image/jpeg")
-        else:
-            # Handle the case when the image cannot be downloaded
-            return FileResponse(default_logo, media_type="image/jpeg")
-    else:
-        # Return the local image file if the logo path is not an HTTP/HTTPS URL
-        return FileResponse(logo_path, media_type="image/jpeg")
+    """Get logo to show on UI"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))  # proxy/
+    menlo_logo = os.path.join(current_dir, "menlo.svg")
+    
+    verbose_proxy_logger.debug("Reading Menlo logo from path: %s", menlo_logo)
+    
+    return FileResponse(menlo_logo, media_type="image/svg+xml")
 
 
 #### INVITATION MANAGEMENT ####
