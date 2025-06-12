@@ -366,11 +366,25 @@ export default function CreateKeyPage() {
                   premiumUser={premiumUser}
                 />
               ) : page == "budgets" ? (
-                <BudgetPanel accessToken={accessToken} />
+                all_admin_roles.includes(userRole) ? (
+                  <BudgetPanel accessToken={accessToken} />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view the Budgets page. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "guardrails" ? (
                 <GuardrailsPanel accessToken={accessToken} userRole={userRole} />
               ): page == "transform-request" ? (
-                <TransformRequestPanel accessToken={accessToken} />
+                all_admin_roles.includes(userRole) ? (
+                  <TransformRequestPanel accessToken={accessToken} />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view the API Playground. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "general-settings" ? (
                 <GeneralSettings
                   userID={userID}
@@ -385,13 +399,20 @@ export default function CreateKeyPage() {
                   premiumUser={premiumUser}
                 />
               ) : page == "caching" ? (
-                <CacheDashboard
-                  userID={userID}
-                  userRole={userRole}
-                  token={token}
-                  accessToken={accessToken}
-                  premiumUser={premiumUser}
-                />
+                all_admin_roles.includes(userRole) ? (
+                  <CacheDashboard
+                    userID={userID}
+                    userRole={userRole}
+                    token={token}
+                    accessToken={accessToken}
+                    premiumUser={premiumUser}
+                  />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view the Caching page. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "pass-through-settings" ? (
                 <PassThroughSettings
                   userID={userID}
@@ -408,23 +429,44 @@ export default function CreateKeyPage() {
                   allTeams={(teams as Team[]) ?? []}
                 />
               ) : page == "mcp-servers" ? (
-                <MCPServers
-                  accessToken={accessToken}
-                  userRole={userRole}
-                  userID={userID}
-                />
+                all_admin_roles.includes(userRole) ? (
+                  <MCPServers
+                    accessToken={accessToken}
+                    userRole={userRole}
+                    userID={userID}
+                  />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view MCP Servers. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "tag-management" ? (
-                <TagManagement
-                  accessToken={accessToken}
-                  userRole={userRole}
-                  userID={userID}
-                />
+                all_admin_roles.includes(userRole) ? (
+                  <TagManagement
+                    accessToken={accessToken}
+                    userRole={userRole}
+                    userID={userID}
+                  />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view Tag Management. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "vector-stores" ? (
-                <VectorStoreManagement
-                  accessToken={accessToken}
-                  userRole={userRole}
-                  userID={userID}
-                />
+                all_admin_roles.includes(userRole) ? (
+                  <VectorStoreManagement
+                    accessToken={accessToken}
+                    userRole={userRole}
+                    userID={userID}
+                  />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view Vector Stores. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "new_usage" ? (
                 <NewUsagePage
                   userID={userID}

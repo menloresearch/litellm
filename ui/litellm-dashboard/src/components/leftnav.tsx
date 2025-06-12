@@ -70,10 +70,11 @@ const Sidebar: React.FC<SidebarProps> = ({
       page: "experimental",
       label: "Experimental", 
       icon: <ExperimentOutlined />,
+      roles: all_admin_roles,
       children: [
         { key: "9", page: "caching", label: "Caching", icon: <DatabaseOutlined />, roles: all_admin_roles },
         { key: "10", page: "budgets", label: "Budgets", icon: <BankOutlined />, roles: all_admin_roles },
-        { key: "20", page: "transform-request", label: "API Playground", icon: <ApiOutlined />, roles: [...all_admin_roles, ...internalUserRoles] },
+        { key: "20", page: "transform-request", label: "API Playground", icon: <ApiOutlined />, roles: all_admin_roles },
         { key: "18", page: "mcp-servers", label: "MCP Servers", icon: <ToolOutlined />, roles: all_admin_roles },
         { key: "19", page: "tag-management", label: "Tag Management", icon: <TagsOutlined />, roles: all_admin_roles },
         { key: "21", page: "vector-stores", label: "Vector Stores", icon: <DatabaseOutlined />, roles: all_admin_roles },
