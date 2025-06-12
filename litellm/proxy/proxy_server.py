@@ -7145,10 +7145,18 @@ def get_image():
 
     # get current_dir
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    default_logo = os.path.join(current_dir, "logo.jpg")
+    default_logo = os.path.join(current_dir, "menlo.svg")
 
     logo_path = os.getenv("UI_LOGO_PATH", default_logo)
     verbose_proxy_logger.debug("Reading logo from path: %s", logo_path)
+
+    def get_media_type(path):
+        if path.lower().endswith(".svg"):
+            return "image/svg+xml"
+        elif path.lower().endswith(('.png', '.jpg', '.jpeg')):
+            return "image/jpeg" if path.lower().endswith(".jpg", ".jpeg") else "image/png"
+        else:
+            return "image/jpeg"
 
     # Check if the logo path is an HTTP/HTTPS URL
     if logo_path.startswith(("http://", "https://")):
@@ -7162,13 +7170,13 @@ def get_image():
                 f.write(response.content)
 
             # Return the cached image as a FileResponse
-            return FileResponse(cache_path, media_type="image/jpeg")
+            return FileResponse(cache_path, media_type=get_media_type(logo_path))
         else:
             # Handle the case when the image cannot be downloaded
-            return FileResponse(default_logo, media_type="image/jpeg")
+            return FileResponse(default_logo, media_type=get_media_type(default_logo))
     else:
         # Return the local image file if the logo path is not an HTTP/HTTPS URL
-        return FileResponse(logo_path, media_type="image/jpeg")
+        return FileResponse(logo_path, media_type=get_media_type(logo_path))
 
 
 #### INVITATION MANAGEMENT ####
