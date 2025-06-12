@@ -7142,11 +7142,8 @@ async def claim_onboarding_link(data: InvitationClaim):
 @app.get("/get_image", include_in_schema=False)
 def get_image():
     """Get logo to show on UI"""
-
-    # Always serve the Menlo SVG logo - single source of truth
     current_dir = os.path.dirname(os.path.abspath(__file__))  # proxy/
-    litellm_root = os.path.dirname(os.path.dirname(current_dir))  # Go up 2 levels to litellm-fork/
-    menlo_logo = os.path.join(litellm_root, "ui", "litellm-dashboard", "public", "assets", "logos", "menlo.svg")
+    menlo_logo = os.path.join(current_dir, "menlo.svg")
     
     verbose_proxy_logger.debug("Reading Menlo logo from path: %s", menlo_logo)
     
