@@ -56,9 +56,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const menuItems: MenuItem[] = [
     { key: "1", page: "api-keys", label: "Virtual Keys", icon: <KeyOutlined /> },
     { key: "3", page: "llm-playground", label: "Test Key", icon: <PlayCircleOutlined />, roles: rolesWithWriteAccess },
-    { key: "2", page: "models", label: "Models", icon: <BlockOutlined />, roles: rolesWithWriteAccess },
+    { key: "2", page: "models", label: "Models", icon: <BlockOutlined />, roles: all_admin_roles },
     { key: "12", page: "new_usage", label: "Usage", icon: <BarChartOutlined />, roles: [...all_admin_roles, ...internalUserRoles] },
-    { key: "6", page: "teams", label: "Teams", icon: <TeamOutlined /> },
+    { key: "6", page: "teams", label: "Teams", icon: <TeamOutlined />, roles: all_admin_roles },
     { key: "17", page: "organizations", label: "Organizations", icon: <BankOutlined />, roles: all_admin_roles },
     { key: "5", page: "users", label: "Internal Users", icon: <UserOutlined />, roles: all_admin_roles },
     { key: "14", page: "api_ref", label: "API Reference", icon: <ApiOutlined /> },

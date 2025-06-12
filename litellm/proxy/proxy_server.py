@@ -156,6 +156,7 @@ from litellm.proxy.auth.auth_checks import (
     ExperimentalUIJWTToken,
     get_team_object,
     log_db_metrics,
+    _is_user_proxy_admin,
 )
 from litellm.proxy.auth.auth_utils import check_response_size_is_safe
 from litellm.proxy.auth.handle_jwt import JWTHandler
@@ -3445,6 +3446,15 @@ async def model_list(
 
     This is just for compatibility with openai projects like aider.
     """
+    # Check if user is admin - only admins can view models
+    if not _is_user_proxy_admin(user_obj=user_api_key_dict.user_obj):
+        raise HTTPException(
+            status_code=403,
+            detail="Only proxy admin can view models. Your role={}".format(
+                user_api_key_dict.user_obj.user_role if user_api_key_dict.user_obj else "unknown"
+            )
+        )
+    
     global llm_model_list, general_settings, llm_router, prisma_client, user_api_key_cache, proxy_logging_obj
     all_models = []
     model_access_groups: Dict[str, List[str]] = defaultdict(list)

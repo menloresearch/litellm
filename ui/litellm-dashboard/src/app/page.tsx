@@ -4,6 +4,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { all_admin_roles } from "@/utils/roles";
 import { defaultOrg } from "@/components/common_components/default_org";
 import { KeyResponse, Team } from "@/components/key_team_helpers/key_list";
 import Navbar from "@/components/navbar";
@@ -289,17 +290,24 @@ export default function CreateKeyPage() {
                   createClicked={createClicked}
                 />
               ) : page == "models" ? (
-                <ModelDashboard
-                  userID={userID}
-                  userRole={userRole}
-                  token={token}
-                  keys={keys}
-                  accessToken={accessToken}
-                  modelData={modelData}
-                  setModelData={setModelData}
-                  premiumUser={premiumUser}
-                  teams={teams}
-                />
+                all_admin_roles.includes(userRole) ? (
+                  <ModelDashboard
+                    userID={userID}
+                    userRole={userRole}
+                    token={token}
+                    keys={keys}
+                    accessToken={accessToken}
+                    modelData={modelData}
+                    setModelData={setModelData}
+                    premiumUser={premiumUser}
+                    teams={teams}
+                  />
+                ) : (
+                  <div style={{ padding: "20px", textAlign: "center" }}>
+                    <h2>Access Denied</h2>
+                    <p>You don't have permission to view the Models page. Admin privileges required.</p>
+                  </div>
+                )
               ) : page == "llm-playground" ? (
                 <ChatUI
                   userID={userID}
