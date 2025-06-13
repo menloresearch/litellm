@@ -58,7 +58,10 @@ cd ui/litellm-dashboard
 chmod +x ./build_ui.sh
 
 # run ./build_ui.sh
-./build_ui.sh
+if ! ./build_ui.sh; then
+    echo "build_ui.sh failed. Exiting..."
+    exit 1
+fi
 
 # return to root directory
 cd ../..

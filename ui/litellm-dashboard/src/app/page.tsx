@@ -305,7 +305,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view the Models page. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "llm-playground" ? (
@@ -371,7 +371,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view the Budgets page. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "guardrails" ? (
@@ -382,7 +382,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view the API Playground. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "general-settings" ? (
@@ -410,7 +410,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view the Caching page. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "pass-through-settings" ? (
@@ -438,7 +438,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view MCP Servers. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "tag-management" ? (
@@ -451,7 +451,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view Tag Management. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "vector-stores" ? (
@@ -464,7 +464,7 @@ export default function CreateKeyPage() {
                 ) : (
                   <div style={{ padding: "20px", textAlign: "center" }}>
                     <h2>Access Denied</h2>
-                    <p>You don't have permission to view Vector Stores. Admin privileges required.</p>
+                    <p>{"You don't have permission to view the Models page. Admin privileges required."}</p>
                   </div>
                 )
               ) : page == "new_usage" ? (
