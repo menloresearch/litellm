@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Menlo Dashboard",
   description: "Menlo Proxy Admin UI",
+  icons: {
+    icon: "/assets/logos/menlo.svg",
+  },
 };
 
 export default function RootLayout({

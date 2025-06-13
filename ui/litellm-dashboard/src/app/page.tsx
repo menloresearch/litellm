@@ -37,6 +37,7 @@ import { MCPToolsViewer, MCPServers } from "@/components/mcp_tools";
 import TagManagement from "@/components/tag_management";
 import VectorStoreManagement from "@/components/vector_store_management";
 import { UiLoadingSpinner } from "@/components/ui/ui-loading-spinner";
+import Image from "next/image";
 import { cx } from '@/lib/cva.config';
 
 function getCookie(name: string) {
@@ -86,8 +87,13 @@ const queryClient = new QueryClient();
 function LoadingScreen() {
   return (
     <div className={cx("h-screen", "flex items-center justify-center gap-4")}>
-      <div className="text-lg font-medium py-2 pr-4 border-r border-r-gray-200">
-        🚅 LiteLLM
+      <div className="flex items-center gap-2 text-lg font-medium py-2 pr-4 border-r border-r-gray-200">
+        <Image 
+          src="/assets/logos/menlo.svg" 
+          alt="Menlo Logo" 
+          width={48} 
+          height={48}
+        />
       </div>
       
       <div className="flex items-center justify-center gap-2">

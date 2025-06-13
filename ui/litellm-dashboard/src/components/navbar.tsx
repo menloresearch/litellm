@@ -65,7 +65,6 @@ const Navbar: React.FC<NavbarProps> = ({
           <p className="text-sm text-gray-600">Role: {userRole}</p>
           <p className="text-sm text-gray-600">Email: {userEmail || "Unknown"}</p>
           <p className="text-sm text-gray-600"><UserOutlined /> {userID}</p>
-          <p className="text-sm text-gray-600">Premium User: {String(premiumUser)}</p>
         </div>
       ),
     },
