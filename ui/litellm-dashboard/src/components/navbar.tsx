@@ -62,9 +62,7 @@ const Navbar: React.FC<NavbarProps> = ({
       key: "1",
       label: (
         <div className="py-1">
-          <p className="text-sm text-gray-600">Role: {userRole}</p>
           <p className="text-sm text-gray-600">Email: {userEmail || "Unknown"}</p>
-          <p className="text-sm text-gray-600"><UserOutlined /> {userID}</p>
         </div>
       ),
     },
