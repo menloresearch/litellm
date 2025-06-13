@@ -1025,6 +1025,15 @@ const ModelDashboard: React.FC<ModelDashboardProps> = ({
     );
   }
 
+  // Check if user has admin access
+  if (!all_admin_roles.includes(userRole || "")) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <Text>Access denied. Admin privileges required to view models.</Text>
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {selectedModelId ? (
