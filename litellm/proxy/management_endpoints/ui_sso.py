@@ -20,7 +20,7 @@ from fastapi.responses import RedirectResponse
 import litellm
 from litellm._logging import verbose_proxy_logger
 from litellm.caching import DualCache
-from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY, FRONTEND_URL
+from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY
 from litellm.llms.custom_httpx.http_handler import (
     AsyncHTTPHandler,
     get_async_httpx_client,
@@ -52,6 +52,7 @@ from litellm.proxy.common_utils.html_forms.jwt_display_template import (
     jwt_display_template,
 )
 from litellm.proxy.common_utils.html_forms.ui_login import html_form
+from litellm.proxy.constants import FRONTEND_URL, COOKIE_DOMAIN
 from litellm.proxy.management_endpoints.internal_user_endpoints import new_user
 from litellm.proxy.management_endpoints.sso_helper_utils import (
     check_is_admin_only_access,
@@ -680,7 +681,7 @@ async def auth_callback(request: Request):  # noqa: PLR0915
         redirect_url += "?login=success"
     verbose_proxy_logger.info(f"Redirecting to {redirect_url}")
     redirect_response = RedirectResponse(url=redirect_url, status_code=303)
-    redirect_response.set_cookie(key="token", value=jwt_token, secure=True)
+    redirect_response.set_cookie(key="token", value=jwt_token, secure=True, domain=COOKIE_DOMAIN)
     return redirect_response
 
 

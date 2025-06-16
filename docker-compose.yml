@@ -21,6 +21,7 @@ services:
       STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
       FRONTEND_URL: "https://platform-dev.menlo.ai"
       # FRONTEND_URL: "http://localhost:3000"  # for local debug
+      COOKIE_DOMAIN: "menlo.ai"  # comment out for local debug
     env_file:
       - .env # Load local .env file
     depends_on:

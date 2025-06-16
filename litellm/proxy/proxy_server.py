@@ -9,7 +9,6 @@ import subprocess
 import sys
 import time
 import traceback
-import uuid
 import warnings
 from datetime import datetime, timedelta
 from typing import (
@@ -22,7 +21,6 @@ from typing import (
     cast,
     get_args,
     get_origin,
-    get_type_hints,
 )
 
 from litellm.constants import (
@@ -30,11 +28,6 @@ from litellm.constants import (
     DEFAULT_SLACK_ALERTING_THRESHOLD,
     LITELLM_EMBEDDING_PROVIDERS_SUPPORTING_INPUT_ARRAY_OF_TOKENS,
     LITELLM_SETTINGS_SAFE_DB_OVERRIDES,
-)
-from litellm.types.utils import (
-    ModelResponse,
-    ModelResponseStream,
-    TextCompletionResponse,
 )
 
 if TYPE_CHECKING:
@@ -66,9 +59,6 @@ sys.path.insert(
 )  # Adds the parent directory to the system path - for litellm local dev
 
 try:
-    import logging
-
-    import backoff
     import fastapi
     import orjson
     import yaml  # type: ignore
@@ -132,14 +122,9 @@ from litellm.constants import (
     PROXY_BATCH_WRITE_AT,
     PROXY_BUDGET_RESCHEDULER_MAX_TIME,
     PROXY_BUDGET_RESCHEDULER_MIN_TIME,
-    FRONTEND_URL,
 )
 from litellm.exceptions import RejectedRequestError
 from litellm.integrations.SlackAlerting.slack_alerting import SlackAlerting
-from litellm.litellm_core_utils.core_helpers import (
-    _get_parent_otel_span_from_kwargs,
-    get_litellm_metadata_from_kwargs,
-)
 from litellm.litellm_core_utils.credential_accessor import CredentialAccessor
 from litellm.litellm_core_utils.litellm_logging import Logging as LiteLLMLoggingObj
 from litellm.litellm_core_utils.sensitive_data_masker import SensitiveDataMasker
@@ -156,7 +141,6 @@ from litellm.proxy.anthropic_endpoints.endpoints import router as anthropic_rout
 from litellm.proxy.auth.auth_checks import (
     ExperimentalUIJWTToken,
     get_team_object,
-    log_db_metrics,
 )
 from litellm.proxy.auth.auth_utils import check_response_size_is_safe
 from litellm.proxy.auth.handle_jwt import JWTHandler
@@ -201,6 +185,7 @@ from litellm.proxy.common_utils.openai_endpoint_utils import (
 from litellm.proxy.common_utils.proxy_state import ProxyState
 from litellm.proxy.common_utils.reset_budget_job import ResetBudgetJob
 from litellm.proxy.common_utils.swagger_utils import ERROR_RESPONSES
+from litellm.proxy.constants import FRONTEND_URL, COOKIE_DOMAIN
 from litellm.proxy.credential_endpoints.endpoints import router as credential_router
 from litellm.proxy.db.db_transaction_queue.spend_log_cleanup import SpendLogCleanup
 from litellm.proxy.db.exception_handler import PrismaDBExceptionHandler
@@ -6791,7 +6776,7 @@ async def login(request: Request):  # noqa: PLR0915
         )
         redirect_url = f"{FRONTEND_URL}?login=success"
         redirect_response = RedirectResponse(url=redirect_url, status_code=303)
-        redirect_response.set_cookie(key="token", value=jwt_token)
+        redirect_response.set_cookie(key="token", value=jwt_token, domain=COOKIE_DOMAIN)
         return redirect_response
     elif _user_row is not None:
         """
@@ -6862,7 +6847,7 @@ async def login(request: Request):  # noqa: PLR0915
             )
             redirect_url = f"{FRONTEND_URL}?login=success"
             redirect_response = RedirectResponse(url=redirect_url, status_code=303)
-            redirect_response.set_cookie(key="token", value=jwt_token)
+            redirect_response.set_cookie(key="token", value=jwt_token, domain=COOKIE_DOMAIN)
             return redirect_response
         else:
             raise ProxyException(
