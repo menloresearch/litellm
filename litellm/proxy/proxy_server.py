@@ -6655,29 +6655,9 @@ async def async_queue_request(
 
 @app.get("/login", tags=["experimental"], include_in_schema=False)
 async def fallback_login(request: Request):
-    """
-    Create Proxy API Keys using Google Workspace SSO. Requires setting PROXY_BASE_URL in .env
-    PROXY_BASE_URL should be the your deployed proxy endpoint, e.g. PROXY_BASE_URL="https://litellm-production-7002.up.railway.app/"
-    Example:
-    """
-    # get url from request
-    redirect_url = os.getenv("PROXY_BASE_URL", str(request.base_url))
-    ui_username = os.getenv("UI_USERNAME")
-    if redirect_url.endswith("/"):
-        redirect_url += "sso/callback"
-    else:
-        redirect_url += "/sso/callback"
+    from fastapi.responses import HTMLResponse
 
-    if ui_username is not None:
-        # No Google, Microsoft SSO
-        # Use UI Credentials set in .env
-        from fastapi.responses import HTMLResponse
-
-        return HTMLResponse(content=html_form, status_code=200)
-    else:
-        from fastapi.responses import HTMLResponse
-
-        return HTMLResponse(content=html_form, status_code=200)
+    return HTMLResponse(content=html_form, status_code=200)
 
 
 @router.post(
@@ -8080,6 +8060,7 @@ async def get_litellm_model_cost_map():
 @router.get("/")
 async def home(request: Request):
     return RedirectResponse(url="/login")
+
 
 @router.get("/routes", dependencies=[Depends(user_api_key_auth)])
 async def get_routes():
