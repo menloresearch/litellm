@@ -53,7 +53,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
   const [fileError, setFileError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uiSettings, setUISettings] = useState<UISettings | null>(null);
-  const [baseUrl, setBaseUrl] = useState("http://localhost:4000");
+  const [baseUrl, setBaseUrl] = useState(process.env.API_URL);
 
   useEffect(() => {
     // Get UI settings

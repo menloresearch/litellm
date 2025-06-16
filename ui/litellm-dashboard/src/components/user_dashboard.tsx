@@ -28,7 +28,7 @@ if (isLocal != true) {
   console.log = function() {};
 }
 console.log("isLocal:", isLocal);
-const proxyBaseUrl = isLocal ? "http://localhost:4000" : null;
+const proxyBaseUrl = process.env.API_URL;
 
 export interface ProxySettings {
   PROXY_BASE_URL: string | null;
@@ -325,21 +325,13 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
   function gotoLogin() {
     // Clear token cookies using the utility function
     clearTokenCookies();
-    
-    const url = proxyBaseUrl
-      ? `${proxyBaseUrl}/login`
-      : `/login`;
-
-    console.log("Full URL:", url);
-    window.location.href = url; 
-
-    return null;
+    window.location.href = `${proxyBaseUrl}/login`;
   }
 
   if (token == null) {
-    // user is not logged in as yet 
+    // user is not logged in as yet
     console.log("All cookies before redirect:", document.cookie);
-    
+
     // Clear token cookies using the utility function
     gotoLogin();
     return null;
@@ -350,37 +342,22 @@ const UserDashboard: React.FC<UserDashboardProps> = ({
       console.log("Decoded token:", decoded);
       const expTime = decoded.exp;
       const currentTime = Math.floor(Date.now() / 1000);
-      
+
       if (expTime && currentTime >= expTime) {
         console.log("Token expired, redirecting to login");
-        
+
         // Clear token cookies
         clearTokenCookies();
-        
-        const url = proxyBaseUrl
-          ? `${proxyBaseUrl}/login`
-          : `/login`;
-        
-        console.log("Full URL for expired token:", url);
-        window.location.href = url;
-        
+        gotoLogin();
         return null;
       }
     } catch (error) {
       console.error("Error decoding token:", error);
       // If there's an error decoding the token, consider it invalid
       clearTokenCookies();
-      
-      const url = proxyBaseUrl
-        ? `${proxyBaseUrl}/login`
-        : `/login`;
-      
-      console.log("Full URL after token decode error:", url);
-      window.location.href = url;
-      
+      gotoLogin();
       return null;
     }
-    
     if (accessToken == null) {
       return null;
     }

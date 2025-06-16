@@ -74,7 +74,6 @@ import { Team } from "./key_team_helpers/key_list";
 import { Setter } from "@/types";
 
 const isLocal = process.env.NODE_ENV === "development";
-const proxyBaseUrl = isLocal ? "http://localhost:4000" : null;
 if (isLocal != true) {
   console.log = function () {};
 }

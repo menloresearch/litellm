@@ -23,9 +23,7 @@ export async function makeOpenAIChatCompletionRequest(
       console.log = function () {};
     }
     console.log("isLocal:", isLocal);
-    const proxyBaseUrl = isLocal
-      ? "http://localhost:4000"
-      : window.location.origin;
+    const proxyBaseUrl = process.env.API_URL;
       
     // Prepare headers with tags and trace ID
     const headers: Record<string, string> = {};
