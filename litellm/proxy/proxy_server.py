@@ -723,33 +723,14 @@ origins = ["*"]
 
 # get current directory
 try:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    ui_path = os.path.join(current_dir, "_experimental", "out")
-    app.mount("/ui", StaticFiles(directory=ui_path, html=True), name="ui")
-    # Iterate through files in the UI directory
-    for filename in os.listdir(ui_path):
-        if filename.endswith(".html") and filename != "index.html":
-            # Create a folder with the same name as the HTML file
-            folder_name = os.path.splitext(filename)[0]
-            folder_path = os.path.join(ui_path, folder_name)
-            os.makedirs(folder_path, exist_ok=True)
-
-            # Move the HTML file into the folder and rename it to 'index.html'
-            src = os.path.join(ui_path, filename)
-            dst = os.path.join(folder_path, "index.html")
-            os.rename(src, dst)
-
     if server_root_path != "":
         verbose_proxy_logger.info(  # noqa
-            f"server_root_path is set, forwarding any /ui requests to {server_root_path}/ui, any /sso/key/generate requests to {server_root_path}/sso/key/generate"
+            f"server_root_path is set, forwarding any /sso/key/generate requests to {server_root_path}/sso/key/generate"
         )  # noqa
 
         @app.middleware("http")
         async def redirect_ui_middleware(request: Request, call_next):
-            if request.url.path.startswith("/ui"):
-                new_url = str(request.url).replace("/ui", f"{server_root_path}/ui", 1)
-                return RedirectResponse(new_url)
-            elif request.url.path == "/sso/key/generate":
+            if request.url.path == "/sso/key/generate":
                 return RedirectResponse(f"{server_root_path}/sso/key/generate")
             return await call_next(request)
 
@@ -8057,9 +8038,9 @@ async def get_litellm_model_cost_map():
         )
 
 
-@router.get("/")
-async def home(request: Request):
-    return RedirectResponse(url="/login")
+# @router.get("/")
+# async def home(request: Request):
+#     return RedirectResponse(url="/login")
 
 
 @router.get("/routes", dependencies=[Depends(user_api_key_auth)])
