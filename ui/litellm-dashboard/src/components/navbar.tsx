@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
   setProxySettings,
   accessToken,
 }) => {
-  const imageUrl = `${process.env.API_URL}/get_image`;
+  const imageUrl = "/ui/assets/logos/menlo.svg";
   const [logoutUrl, setLogoutUrl] = useState("");
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({
             <Link href="/" className="flex items-center">
               <img
                 src={imageUrl}
-                alt="LiteLLM Brand"
+                alt="Menlo Platform"
                 className="h-8 w-auto"
               />
             </Link>
