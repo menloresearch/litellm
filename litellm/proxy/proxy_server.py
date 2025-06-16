@@ -434,25 +434,6 @@ else:
         global_max_parallel_request_retry_timeout_env
     )
 
-ui_link = f"{server_root_path}/ui/"
-ui_message = (
-    f"👉 [```LiteLLM Admin Panel on /ui```]({ui_link}). Create, Edit Keys with SSO"
-)
-ui_message += "\n\n💸 [```LiteLLM Model Cost Map```](https://models.litellm.ai/)."
-
-custom_swagger_message = "[**Customize Swagger Docs**](https://docs.litellm.ai/docs/proxy/enterprise#swagger-docs---custom-routes--branding)"
-
-### CUSTOM BRANDING [ENTERPRISE FEATURE] ###
-_title = os.getenv("DOCS_TITLE", "LiteLLM API") if premium_user else "LiteLLM API"
-_description = (
-    os.getenv(
-        "DOCS_DESCRIPTION",
-        f"Enterprise Edition \n\nProxy Server to call 100+ LLMs in the OpenAI format. {custom_swagger_message}\n\n{ui_message}",
-    )
-    if premium_user
-    else f"Proxy Server to call 100+ LLMs in the OpenAI format. {custom_swagger_message}\n\n{ui_message}"
-)
-
 
 def cleanup_router_config_variables():
     global master_key, user_config_file_path, otel_logging, user_custom_auth, user_custom_auth_path, user_custom_key_generate, user_custom_sso, use_background_health_checks, health_check_interval, prisma_client
@@ -621,6 +602,9 @@ async def proxy_startup_event(app: FastAPI):
     # Shutdown event
     await proxy_shutdown_event()
 
+
+_title = "Menlo Platform API"
+_description = "Swagger UI"
 
 app = FastAPI(
     docs_url=_get_docs_url(),
