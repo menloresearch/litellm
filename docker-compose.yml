@@ -39,6 +39,7 @@ services:
       args:
         API_URL: https://api-dev.menlo.ai
         # API_URL: http://localhost:4000  # for local debug
+        COOKIE_DOMAIN: "menlo.ai"  # comment out for local debug
     ports:
       - "3000:3000"
     depends_on:

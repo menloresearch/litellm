@@ -8,6 +8,7 @@ const nextConfig = {
     env: {
         API_URL: process.env.API_URL ?? '',
         UI_BASE_PATH: UI_BASE_PATH,
+        COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,  // may be undefined
     },
 };
 
