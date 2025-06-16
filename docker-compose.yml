@@ -41,7 +41,7 @@ services:
       args:
         # for local debug, comment these out
         API_URL: "https://api-dev.menlo.ai"
-        COOKIE_DOMAIN: "menlo.ai"
+        COOKIE_DOMAIN: ".menlo.ai"  # .prefix is intentional, due to sibiling domains
     ports:
       - "3000:3000"
     depends_on:
