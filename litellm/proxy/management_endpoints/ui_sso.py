@@ -68,6 +68,7 @@ if TYPE_CHECKING:
 else:
     from typing import Any as OpenID
 
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000/ui")
 router = APIRouter()
 
 
@@ -602,7 +603,6 @@ async def auth_callback(request: Request):  # noqa: PLR0915
     key = response["token"]  # type: ignore
     user_id = response["user_id"]  # type: ignore
 
-    litellm_dashboard_ui = "/ui/"
     user_role = (
         user_defined_values["user_role"]
         or LitellmUserRoles.INTERNAL_USER_VIEW_ONLY.value
@@ -676,10 +676,11 @@ async def auth_callback(request: Request):  # noqa: PLR0915
         algorithm="HS256",
     )
     verbose_proxy_logger.info(f"user_id: {user_id}; jwt_token: {jwt_token}")
+    redirect_url = FRONTEND_URL
     if user_id is not None and isinstance(user_id, str):
-        litellm_dashboard_ui += "?login=success"
-    verbose_proxy_logger.info(f"Redirecting to {litellm_dashboard_ui}")
-    redirect_response = RedirectResponse(url=litellm_dashboard_ui, status_code=303)
+        redirect_url += "?login=success"
+    verbose_proxy_logger.info(f"Redirecting to {redirect_url}")
+    redirect_response = RedirectResponse(url=redirect_url, status_code=303)
     redirect_response.set_cookie(key="token", value=jwt_token, secure=True)
     return redirect_response
 
