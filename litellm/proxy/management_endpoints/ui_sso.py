@@ -52,7 +52,7 @@ from litellm.proxy.common_utils.html_forms.jwt_display_template import (
     jwt_display_template,
 )
 from litellm.proxy.common_utils.html_forms.ui_login import html_form
-from litellm.proxy.constants import FRONTEND_URL, COOKIE_DOMAIN
+from litellm.proxy.constants import FRONTEND_URL, COOKIE_DOMAIN, PROXY_BASE_URL
 from litellm.proxy.management_endpoints.internal_user_endpoints import new_user
 from litellm.proxy.management_endpoints.sso_helper_utils import (
     check_is_admin_only_access,
@@ -69,6 +69,8 @@ if TYPE_CHECKING:
 else:
     from typing import Any as OpenID
 
+SSO_CALLBACK_URL = f"{PROXY_BASE_URL}/sso/callback"
+SSO_DEBUG_CALLBACK_URL = f"{PROXY_BASE_URL}/sso/debug/callback"
 router = APIRouter()
 
 
@@ -112,12 +114,6 @@ async def google_login(request: Request):  # noqa: PLR0915
         return missing_env_vars
     ui_username = os.getenv("UI_USERNAME")
 
-    # get url from request
-    redirect_url = SSOAuthenticationHandler.get_redirect_url_for_sso(
-        request=request,
-        sso_callback_route="sso/callback",
-    )
-
     # Check if we should use SSO handler
     if (
         SSOAuthenticationHandler.should_use_sso_handler(
@@ -127,9 +123,9 @@ async def google_login(request: Request):  # noqa: PLR0915
         )
         is True
     ):
-        verbose_proxy_logger.info(f"Redirecting to SSO login for {redirect_url}")
+        verbose_proxy_logger.info(f"Redirecting to SSO login for {SSO_CALLBACK_URL}")
         return await SSOAuthenticationHandler.get_sso_login_redirect(
-            redirect_url=redirect_url,
+            redirect_url=SSO_CALLBACK_URL,
             microsoft_client_id=microsoft_client_id,
             google_client_id=google_client_id,
             generic_client_id=generic_client_id,
@@ -470,31 +466,26 @@ async def auth_callback(request: Request):  # noqa: PLR0915
             param="master_key",
             code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
-    redirect_url = os.getenv("PROXY_BASE_URL", str(request.base_url))
-    if redirect_url.endswith("/"):
-        redirect_url += "sso/callback"
-    else:
-        redirect_url += "/sso/callback"
 
     result = None
     if google_client_id is not None:
         result = await GoogleSSOHandler.get_google_callback_response(
             request=request,
             google_client_id=google_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_CALLBACK_URL,
         )
     elif microsoft_client_id is not None:
         result = await MicrosoftSSOHandler.get_microsoft_callback_response(
             request=request,
             microsoft_client_id=microsoft_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_CALLBACK_URL,
         )
     elif generic_client_id is not None:
         result = await get_generic_sso_response(
             request=request,
             jwt_handler=jwt_handler,
             generic_client_id=generic_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_CALLBACK_URL,
         )
 
     if result is None:
@@ -752,7 +743,6 @@ async def insert_sso_user(
 async def get_ui_settings(request: Request):
     from litellm.proxy.proxy_server import general_settings, proxy_state
 
-    _proxy_base_url = os.getenv("PROXY_BASE_URL", None)
     _logout_url = os.getenv("PROXY_LOGOUT_URL", None)
     _is_sso_enabled = _has_user_setup_sso()
     disable_expensive_db_queries = (
@@ -765,7 +755,7 @@ async def get_ui_settings(request: Request):
             default_team_disabled = True
 
     return {
-        "PROXY_BASE_URL": _proxy_base_url,
+        "PROXY_BASE_URL": PROXY_BASE_URL,
         "PROXY_LOGOUT_URL": _logout_url,
         "DEFAULT_TEAM_DISABLED": default_team_disabled,
         "SSO_ENABLED": _is_sso_enabled,
@@ -936,21 +926,6 @@ class SSOAuthenticationHandler:
         ):
             return True
         return False
-
-    @staticmethod
-    def get_redirect_url_for_sso(
-        request: Request,
-        sso_callback_route: str,
-    ) -> str:
-        """
-        Get the redirect URL for SSO
-        """
-        redirect_url = os.getenv("PROXY_BASE_URL", str(request.base_url))
-        if redirect_url.endswith("/"):
-            redirect_url += sso_callback_route
-        else:
-            redirect_url += "/" + sso_callback_route
-        return redirect_url
 
     @staticmethod
     async def upsert_sso_user(
@@ -1469,12 +1444,6 @@ async def debug_sso_login(request: Request):
                 code=status.HTTP_403_FORBIDDEN,
             )
 
-    # get url from request
-    redirect_url = SSOAuthenticationHandler.get_redirect_url_for_sso(
-        request=request,
-        sso_callback_route="sso/debug/callback",
-    )
-
     # Check if we should use SSO handler
     if (
         SSOAuthenticationHandler.should_use_sso_handler(
@@ -1485,7 +1454,7 @@ async def debug_sso_login(request: Request):
         is True
     ):
         return await SSOAuthenticationHandler.get_sso_login_redirect(
-            redirect_url=redirect_url,
+            redirect_url=SSO_DEBUG_CALLBACK_URL,
             microsoft_client_id=microsoft_client_id,
             google_client_id=google_client_id,
             generic_client_id=generic_client_id,
@@ -1507,25 +1476,19 @@ async def debug_sso_callback(request: Request):
     google_client_id = os.getenv("GOOGLE_CLIENT_ID", None)
     generic_client_id = os.getenv("GENERIC_CLIENT_ID", None)
 
-    redirect_url = os.getenv("PROXY_BASE_URL", str(request.base_url))
-    if redirect_url.endswith("/"):
-        redirect_url += "sso/debug/callback"
-    else:
-        redirect_url += "/sso/debug/callback"
-
     result = None
     if google_client_id is not None:
         result = await GoogleSSOHandler.get_google_callback_response(
             request=request,
             google_client_id=google_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_DEBUG_CALLBACK_URL,
             return_raw_sso_response=True,
         )
     elif microsoft_client_id is not None:
         result = await MicrosoftSSOHandler.get_microsoft_callback_response(
             request=request,
             microsoft_client_id=microsoft_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_DEBUG_CALLBACK_URL,
             return_raw_sso_response=True,
         )
 
@@ -1534,7 +1497,7 @@ async def debug_sso_callback(request: Request):
             request=request,
             jwt_handler=jwt_handler,
             generic_client_id=generic_client_id,
-            redirect_url=redirect_url,
+            redirect_url=SSO_DEBUG_CALLBACK_URL,
         )
 
     # If result is None, return a basic error message

@@ -69,6 +69,7 @@ from litellm.proxy._types import (
     Member,
     UserAPIKeyAuth,
 )
+from litellm.proxy.constants import PROXY_BASE_URL
 from litellm.proxy.db.create_views import (
     create_missing_views,
     should_create_missing_views,
@@ -692,12 +693,10 @@ class ProxyLogging:
 
         # Get the current timestamp
         current_time = datetime.now().strftime("%H:%M:%S")
-        _proxy_base_url = os.getenv("PROXY_BASE_URL", None)
         formatted_message = (
             f"Level: `{level}`\nTimestamp: `{current_time}`\n\nMessage: {message}"
         )
-        if _proxy_base_url is not None:
-            formatted_message += f"\n\nProxy URL: `{_proxy_base_url}`"
+        formatted_message += f"\n\nProxy URL: `{PROXY_BASE_URL}`"
 
         extra_kwargs = {}
         alerting_metadata = {}

@@ -19,9 +19,11 @@ services:
     environment:
       DATABASE_URL: "postgresql://llmproxy:dbpassword9090@db:5432/litellm"
       STORE_MODEL_IN_DB: "True" # allows adding models to proxy via UI
+
+      # for local debug, comment these out
+      PROXY_BASE_URL: "https://api-dev.menlo.ai"
       FRONTEND_URL: "https://platform-dev.menlo.ai"
-      # FRONTEND_URL: "http://localhost:3000"  # for local debug
-      COOKIE_DOMAIN: "menlo.ai"  # comment out for local debug
+      COOKIE_DOMAIN: "menlo.ai"
     env_file:
       - .env # Load local .env file
     depends_on:
@@ -37,9 +39,9 @@ services:
     build:
       context: ./ui/litellm-dashboard
       args:
-        API_URL: https://api-dev.menlo.ai
-        # API_URL: http://localhost:4000  # for local debug
-        COOKIE_DOMAIN: "menlo.ai"  # comment out for local debug
+        # for local debug, comment these out
+        API_URL: "https://api-dev.menlo.ai"
+        COOKIE_DOMAIN: "menlo.ai"
     ports:
       - "3000:3000"
     depends_on:
