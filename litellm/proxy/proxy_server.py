@@ -7139,17 +7139,6 @@ async def claim_onboarding_link(data: InvitationClaim):
     return user_obj
 
 
-@app.get("/get_image", include_in_schema=False)
-def get_image():
-    """Get logo to show on UI"""
-    current_dir = os.path.dirname(os.path.abspath(__file__))  # proxy/
-    menlo_logo = os.path.join(current_dir, "menlo.svg")
-    
-    verbose_proxy_logger.debug("Reading Menlo logo from path: %s", menlo_logo)
-    
-    return FileResponse(menlo_logo, media_type="image/svg+xml")
-
-
 #### INVITATION MANAGEMENT ####
 
 
