@@ -80,9 +80,7 @@ async function testFallbackModelResponse(
     console.log = function() {};
   }
   console.log("isLocal:", isLocal);
-  const proxyBaseUrl = isLocal
-    ? "http://localhost:4000"
-    : window.location.origin;
+  const proxyBaseUrl = process.env.API_URL;
   const client = new openai.OpenAI({
     apiKey: accessToken, // Replace with your OpenAI API key
     baseURL: proxyBaseUrl, // Replace with your OpenAI API base URL
