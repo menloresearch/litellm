@@ -419,6 +419,6 @@ Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at b
 To test deployment
 
 ```
-docker compose build
+docker compose build --parallel
 docker compose up
 ```

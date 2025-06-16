@@ -37,7 +37,7 @@ WORKDIR /app
 
 # install dependencies
 COPY ./requirements.txt ./requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
 # copy app data
 # TODO: only copy what's necessary
