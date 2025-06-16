@@ -1,7 +1,7 @@
 import os
 
-url_to_redirect_to = os.getenv("PROXY_BASE_URL", "")
-url_to_redirect_to += "/login"
+SERVER_ROOT_PATH = os.getenv("SERVER_ROOT_PATH", "")
+
 html_form = f"""
 <!DOCTYPE html>
 <html lang="en">
@@ -30,18 +30,18 @@ html_form = f"""
             width: 450px;
             max-width: 100%;
         }}
-        
+
         .logo-container {{
             text-align: center;
             margin-bottom: 30px;
         }}
-        
+
         .logo {{
             font-size: 24px;
             font-weight: 600;
             color: #1e293b;
         }}
-        
+
         h2 {{
             margin: 0 0 10px;
             color: #1e293b;
@@ -49,7 +49,7 @@ html_form = f"""
             font-weight: 600;
             text-align: center;
         }}
-        
+
         .subtitle {{
             color: #64748b;
             margin: 0 0 20px;
@@ -64,7 +64,7 @@ html_form = f"""
             margin-bottom: 30px;
             border-left: 4px solid #2563eb;
         }}
-        
+
         .info-header {{
             display: flex;
             align-items: center;
@@ -73,11 +73,11 @@ html_form = f"""
             font-weight: 600;
             font-size: 16px;
         }}
-        
+
         .info-header svg {{
             margin-right: 8px;
         }}
-        
+
         .info-box p {{
             color: #475569;
             margin: 8px 0;
@@ -92,7 +92,7 @@ html_form = f"""
             color: #334155;
             font-size: 14px;
         }}
-        
+
         .required {{
             color: #dc2626;
             margin-left: 2px;
@@ -111,7 +111,7 @@ html_form = f"""
             background-color: #fff;
             transition: border-color 0.2s, box-shadow 0.2s;
         }}
-        
+
         input[type="text"]:focus,
         input[type="password"]:focus {{
             outline: none;
@@ -125,7 +125,7 @@ html_form = f"""
             margin-top: -15px;
             margin-bottom: 20px;
         }}
-        
+
         .toggle-password input {{
             margin-right: 6px;
         }}
@@ -155,7 +155,7 @@ html_form = f"""
             color: #64748b;
             font-size: 14px;
         }}
-        
+
         .divider::before {{
             content: '';
             position: absolute;
@@ -166,14 +166,14 @@ html_form = f"""
             background-color: #e2e8f0;
             z-index: 1;
         }}
-        
+
         .divider span {{
             background-color: #fff;
             padding: 0 15px;
             position: relative;
             z-index: 2;
         }}
-        
+
         .sso-button {{
             background-color: #fff;
             color: #334155;
@@ -196,18 +196,18 @@ html_form = f"""
             border-color: #cbd5e1;
             text-decoration: none;
         }}
-        
+
         .sso-button svg {{
             margin-right: 8px;
             flex-shrink: 0;
         }}
-        
+
         .sso-button-content {{
             display: flex;
             align-items: center;
             justify-content: center;
         }}
-        
+
         a {{
             color: #3b82f6;
             text-decoration: none;
@@ -216,7 +216,7 @@ html_form = f"""
         a:hover {{
             text-decoration: underline;
         }}
-        
+
         code {{
             background-color: #f1f5f9;
             padding: 2px 4px;
@@ -225,7 +225,7 @@ html_form = f"""
             font-size: 13px;
             color: #334155;
         }}
-        
+
         .help-text {{
             color: #64748b;
             font-size: 14px;
@@ -235,7 +235,7 @@ html_form = f"""
     </style>
 </head>
 <body>
-    <form action="{url_to_redirect_to}" method="post">
+    <form action="{SERVER_ROOT_PATH}/login" method="post">
         <div class="logo-container">
             <div class="logo">
                 <svg width="100" height="26" viewBox="0 0 100 26" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -251,7 +251,7 @@ html_form = f"""
         <h2>Login</h2>
         <label for="username">Username<span class="required">*</span></label>
         <input type="text" id="username" name="username" required placeholder="Enter your username" autocomplete="username">
-        
+
         <label for="password">Password<span class="required">*</span></label>
         <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
         <div class="toggle-password">
@@ -262,8 +262,8 @@ html_form = f"""
         <div class="divider">
             <span>or</span>
         </div>
-        
-        <a href="{url_to_redirect_to.replace('/login', '/sso/key/generate')}" class="sso-button">
+
+        <a href="{SERVER_ROOT_PATH}/sso/key/generate" class="sso-button">
             <div class="sso-button-content">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
