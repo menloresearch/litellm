@@ -88,14 +88,14 @@ function LoadingScreen() {
   return (
     <div className={cx("h-screen", "flex items-center justify-center gap-4")}>
       <div className="flex items-center gap-2 text-lg font-medium py-2 pr-4 border-r border-r-gray-200">
-        <Image 
-          src="/assets/logos/menlo.svg" 
-          alt="Menlo Logo" 
-          width={48} 
-          height={48}
+        <Image
+          src="/ui/assets/logos/menlo.svg"
+          alt="Menlo Logo"
+          width={120}
+          height={60}
         />
       </div>
-      
+
       <div className="flex items-center justify-center gap-2">
         <UiLoadingSpinner className="size-4" />
         <span className="text-gray-600 text-sm">Loading...</span>
