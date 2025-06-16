@@ -4,7 +4,7 @@ const nextConfig = {
     basePath: process.env.UI_BASE_PATH || '/ui',
 
     env: {
-        API_URL: process.env.API_URL,
+        API_URL: process.env.API_URL ?? '',
     },
 };
 
