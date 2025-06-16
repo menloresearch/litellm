@@ -39,19 +39,15 @@ WORKDIR /app
 COPY ./requirements.txt ./requirements.txt
 RUN pip install -r requirements.txt --no-cache-dir
 
-# copy app data
-# TODO: only copy what's necessary
-COPY . .
-RUN ls -la /app
+# generate prisma client
+COPY ./schema.prisma ./schema.prisma
+RUN prisma generate
 
-# Copy the built wheel from the builder stage to the runtime stage; assumes only one wheel file is present
+# install wheels from builder stage
 COPY --from=builder /app/dist/*.whl .
-
-# Install the built wheel using pip; again using a wildcard if it's the only file
 RUN pip install *.whl && rm -f *.whl
 
-# Generate prisma client
-RUN prisma generate
+COPY ./docker ./docker
 RUN chmod +x docker/entrypoint.sh
 RUN chmod +x docker/prod_entrypoint.sh
 
