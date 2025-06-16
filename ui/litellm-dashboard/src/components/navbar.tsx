@@ -30,7 +30,7 @@ const Navbar: React.FC<NavbarProps> = ({
   setProxySettings,
   accessToken,
 }) => {
-  const imageUrl = "/ui/assets/logos/menlo.svg";
+  const imageUrl = `${process.env.UI_BASE_PATH}/assets/logos/menlo.svg`;
   const [logoutUrl, setLogoutUrl] = useState("");
 
   useEffect(() => {

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Menlo Dashboard",
   description: "Menlo Proxy Admin UI",
   icons: {
-    icon: "/ui/assets/logos/menlo.svg",
+    icon: `${process.env.UI_BASE_PATH}/assets/logos/menlo.svg`,
   },
 };
 
