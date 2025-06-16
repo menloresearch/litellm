@@ -758,4 +758,4 @@ DEFAULT_MANAGEMENT_OBJECT_IN_MEMORY_CACHE_TTL = int(
     os.getenv("DEFAULT_MANAGEMENT_OBJECT_IN_MEMORY_CACHE_TTL", 60)
 )
 
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000/ui")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000")

@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const UI_BASE_PATH = process.env.UI_BASE_PATH || '/ui'
+const UI_BASE_PATH = process.env.UI_BASE_PATH || ''
 
 const nextConfig = {
     // output: 'export',

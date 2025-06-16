@@ -41,10 +41,11 @@ export default function OnboardingModal({
   };
 
   const getInvitationUrl = () => {
+    const UI_BASE_URL = process.env.UI_BASE_URL ?? ''
     if (invitationLinkData?.has_user_setup_sso) {
-      return new URL("/ui", baseUrl).toString();
+      return new URL(UI_BASE_URL, baseUrl).toString();
     }
-    return new URL(`/ui?invitation_id=${invitationLinkData?.id}`, baseUrl).toString();
+    return new URL(`${UI_BASE_URL}?invitation_id=${invitationLinkData?.id}`, baseUrl).toString();
   };
 
   return (
