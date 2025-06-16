@@ -132,6 +132,7 @@ from litellm.constants import (
     PROXY_BATCH_WRITE_AT,
     PROXY_BUDGET_RESCHEDULER_MAX_TIME,
     PROXY_BUDGET_RESCHEDULER_MIN_TIME,
+    FRONTEND_URL,
 )
 from litellm.exceptions import RejectedRequestError
 from litellm.integrations.SlackAlerting.slack_alerting import SlackAlerting
@@ -6784,11 +6785,6 @@ async def login(request: Request):  # noqa: PLR0915
                 code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         key = response["token"]  # type: ignore
-        litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-        if litellm_dashboard_ui.endswith("/"):
-            litellm_dashboard_ui += "ui/"
-        else:
-            litellm_dashboard_ui += "/ui/"
         import jwt
 
         if get_secret_bool("EXPERIMENTAL_UI_LOGIN"):
@@ -6832,8 +6828,8 @@ async def login(request: Request):  # noqa: PLR0915
             master_key,
             algorithm="HS256",
         )
-        litellm_dashboard_ui += "?login=success"
-        redirect_response = RedirectResponse(url=litellm_dashboard_ui, status_code=303)
+        redirect_url = f"{FRONTEND_URL}?login=success"
+        redirect_response = RedirectResponse(url=redirect_url, status_code=303)
         redirect_response.set_cookie(key="token", value=jwt_token)
         return redirect_response
     elif _user_row is not None:
@@ -6885,11 +6881,6 @@ async def login(request: Request):  # noqa: PLR0915
                     code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
             key = response["token"]  # type: ignore
-            litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-            if litellm_dashboard_ui.endswith("/"):
-                litellm_dashboard_ui += "ui/"
-            else:
-                litellm_dashboard_ui += "/ui/"
             import jwt
 
             jwt_token = jwt.encode(  # type: ignore
@@ -6908,10 +6899,8 @@ async def login(request: Request):  # noqa: PLR0915
                 master_key,
                 algorithm="HS256",
             )
-            litellm_dashboard_ui += "?login=success"
-            redirect_response = RedirectResponse(
-                url=litellm_dashboard_ui, status_code=303
-            )
+            redirect_url = f"{FRONTEND_URL}?login=success"
+            redirect_response = RedirectResponse(url=redirect_url, status_code=303)
             redirect_response.set_cookie(key="token", value=jwt_token)
             return redirect_response
         else:
@@ -7011,11 +7000,6 @@ async def onboarding(invite_link: str):
     )
     key = response["token"]  # type: ignore
 
-    litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-    if litellm_dashboard_ui.endswith("/"):
-        litellm_dashboard_ui += "ui/onboarding"
-    else:
-        litellm_dashboard_ui += "/ui/onboarding"
     import jwt
 
     disabled_non_admin_personal_key_creation = (
@@ -7039,9 +7023,9 @@ async def onboarding(invite_link: str):
         algorithm="HS256",
     )
 
-    litellm_dashboard_ui += "?token={}&user_email={}".format(jwt_token, user_email)
+    login_url = f"{FRONTEND_URL}/onboarding?token={jwt_token}&user_email={user_email}"
     return {
-        "login_url": litellm_dashboard_ui,
+        "login_url": login_url,
         "token": jwt_token,
         "user_email": user_email,
     }

@@ -20,7 +20,7 @@ from fastapi.responses import RedirectResponse
 import litellm
 from litellm._logging import verbose_proxy_logger
 from litellm.caching import DualCache
-from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY
+from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY, FRONTEND_URL
 from litellm.llms.custom_httpx.http_handler import (
     AsyncHTTPHandler,
     get_async_httpx_client,
@@ -68,7 +68,6 @@ if TYPE_CHECKING:
 else:
     from typing import Any as OpenID
 
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:3000/ui")
 router = APIRouter()
 
 
