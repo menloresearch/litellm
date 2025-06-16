@@ -58,7 +58,7 @@ export const provider_map: Record<string, string> = {
     Triton: "triton"
 };
 
-const asset_logos_folder = '/ui/assets/logos/';
+const asset_logos_folder = `${process.env.UI_BASE_PATH}/assets/logos/`;
 
 export const providerLogoMap: Record<string, string> = {
     [Providers.Anthropic]: `${asset_logos_folder}anthropic.svg`,

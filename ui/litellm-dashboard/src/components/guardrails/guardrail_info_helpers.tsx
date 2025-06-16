@@ -22,7 +22,7 @@ export const shouldRenderPIIConfigSettings = (provider: string | null) => {
     return providerEnum === GuardrailProviders.PresidioPII;
 };
 
-const asset_logos_folder = '../ui/assets/logos/';
+const asset_logos_folder = `${process.env.UI_BASE_PATH}/assets/logos/`;
 
 export const guardrailLogoMap: Record<string, string> = {
     [GuardrailProviders.PresidioPII]: `${asset_logos_folder}presidio.png`,

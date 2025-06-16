@@ -412,7 +412,7 @@ If you have suggestions on how to improve the code quality feel free to open an 
 2. Install the proxy and extra dependencies `uv pip install -e ".[proxy]"` and `uv pip install -r requirements.txt`
 3. Run `prisma generate`
 4. Set `DATABASE_URL=postgresql://llmproxy:dbpassword9090@localhost:5432/litellm` and `STORE_MODEL_IN_DB=True` (from `docker-compose.yml`)
-5. Start proxy backend `litellm --config=config.yaml` at `localhost:4000`
+5. Start proxy backend `LITELLM_MODE=DEV litellm --config=config.yaml` at `localhost:4000` (`LITELLM_MODE=DEV` is optional, to load `.env`)
 
 Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at backend e.g. `localhost:4000/login`.
 

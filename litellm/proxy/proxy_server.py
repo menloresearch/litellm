@@ -132,6 +132,7 @@ from litellm.constants import (
     PROXY_BATCH_WRITE_AT,
     PROXY_BUDGET_RESCHEDULER_MAX_TIME,
     PROXY_BUDGET_RESCHEDULER_MIN_TIME,
+    FRONTEND_URL,
 )
 from litellm.exceptions import RejectedRequestError
 from litellm.integrations.SlackAlerting.slack_alerting import SlackAlerting
@@ -434,25 +435,6 @@ else:
         global_max_parallel_request_retry_timeout_env
     )
 
-ui_link = f"{server_root_path}/ui/"
-ui_message = (
-    f"👉 [```LiteLLM Admin Panel on /ui```]({ui_link}). Create, Edit Keys with SSO"
-)
-ui_message += "\n\n💸 [```LiteLLM Model Cost Map```](https://models.litellm.ai/)."
-
-custom_swagger_message = "[**Customize Swagger Docs**](https://docs.litellm.ai/docs/proxy/enterprise#swagger-docs---custom-routes--branding)"
-
-### CUSTOM BRANDING [ENTERPRISE FEATURE] ###
-_title = os.getenv("DOCS_TITLE", "LiteLLM API") if premium_user else "LiteLLM API"
-_description = (
-    os.getenv(
-        "DOCS_DESCRIPTION",
-        f"Enterprise Edition \n\nProxy Server to call 100+ LLMs in the OpenAI format. {custom_swagger_message}\n\n{ui_message}",
-    )
-    if premium_user
-    else f"Proxy Server to call 100+ LLMs in the OpenAI format. {custom_swagger_message}\n\n{ui_message}"
-)
-
 
 def cleanup_router_config_variables():
     global master_key, user_config_file_path, otel_logging, user_custom_auth, user_custom_auth_path, user_custom_key_generate, user_custom_sso, use_background_health_checks, health_check_interval, prisma_client
@@ -621,6 +603,9 @@ async def proxy_startup_event(app: FastAPI):
     # Shutdown event
     await proxy_shutdown_event()
 
+
+_title = "Menlo Platform API"
+_description = "Swagger UI"
 
 app = FastAPI(
     docs_url=_get_docs_url(),
@@ -6670,29 +6655,9 @@ async def async_queue_request(
 
 @app.get("/login", tags=["experimental"], include_in_schema=False)
 async def fallback_login(request: Request):
-    """
-    Create Proxy API Keys using Google Workspace SSO. Requires setting PROXY_BASE_URL in .env
-    PROXY_BASE_URL should be the your deployed proxy endpoint, e.g. PROXY_BASE_URL="https://litellm-production-7002.up.railway.app/"
-    Example:
-    """
-    # get url from request
-    redirect_url = os.getenv("PROXY_BASE_URL", str(request.base_url))
-    ui_username = os.getenv("UI_USERNAME")
-    if redirect_url.endswith("/"):
-        redirect_url += "sso/callback"
-    else:
-        redirect_url += "/sso/callback"
+    from fastapi.responses import HTMLResponse
 
-    if ui_username is not None:
-        # No Google, Microsoft SSO
-        # Use UI Credentials set in .env
-        from fastapi.responses import HTMLResponse
-
-        return HTMLResponse(content=html_form, status_code=200)
-    else:
-        from fastapi.responses import HTMLResponse
-
-        return HTMLResponse(content=html_form, status_code=200)
+    return HTMLResponse(content=html_form, status_code=200)
 
 
 @router.post(
@@ -6800,11 +6765,6 @@ async def login(request: Request):  # noqa: PLR0915
                 code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
         key = response["token"]  # type: ignore
-        litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-        if litellm_dashboard_ui.endswith("/"):
-            litellm_dashboard_ui += "ui/"
-        else:
-            litellm_dashboard_ui += "/ui/"
         import jwt
 
         if get_secret_bool("EXPERIMENTAL_UI_LOGIN"):
@@ -6848,8 +6808,8 @@ async def login(request: Request):  # noqa: PLR0915
             master_key,
             algorithm="HS256",
         )
-        litellm_dashboard_ui += "?login=success"
-        redirect_response = RedirectResponse(url=litellm_dashboard_ui, status_code=303)
+        redirect_url = f"{FRONTEND_URL}?login=success"
+        redirect_response = RedirectResponse(url=redirect_url, status_code=303)
         redirect_response.set_cookie(key="token", value=jwt_token)
         return redirect_response
     elif _user_row is not None:
@@ -6901,11 +6861,6 @@ async def login(request: Request):  # noqa: PLR0915
                     code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
             key = response["token"]  # type: ignore
-            litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-            if litellm_dashboard_ui.endswith("/"):
-                litellm_dashboard_ui += "ui/"
-            else:
-                litellm_dashboard_ui += "/ui/"
             import jwt
 
             jwt_token = jwt.encode(  # type: ignore
@@ -6924,10 +6879,8 @@ async def login(request: Request):  # noqa: PLR0915
                 master_key,
                 algorithm="HS256",
             )
-            litellm_dashboard_ui += "?login=success"
-            redirect_response = RedirectResponse(
-                url=litellm_dashboard_ui, status_code=303
-            )
+            redirect_url = f"{FRONTEND_URL}?login=success"
+            redirect_response = RedirectResponse(url=redirect_url, status_code=303)
             redirect_response.set_cookie(key="token", value=jwt_token)
             return redirect_response
         else:
@@ -7027,11 +6980,6 @@ async def onboarding(invite_link: str):
     )
     key = response["token"]  # type: ignore
 
-    litellm_dashboard_ui = os.getenv("PROXY_BASE_URL", "")
-    if litellm_dashboard_ui.endswith("/"):
-        litellm_dashboard_ui += "ui/onboarding"
-    else:
-        litellm_dashboard_ui += "/ui/onboarding"
     import jwt
 
     disabled_non_admin_personal_key_creation = (
@@ -7055,9 +7003,9 @@ async def onboarding(invite_link: str):
         algorithm="HS256",
     )
 
-    litellm_dashboard_ui += "?token={}&user_email={}".format(jwt_token, user_email)
+    login_url = f"{FRONTEND_URL}/onboarding?token={jwt_token}&user_email={user_email}"
     return {
-        "login_url": litellm_dashboard_ui,
+        "login_url": login_url,
         "token": jwt_token,
         "user_email": user_email,
     }
@@ -8112,6 +8060,7 @@ async def get_litellm_model_cost_map():
 @router.get("/")
 async def home(request: Request):
     return RedirectResponse(url="/login")
+
 
 @router.get("/routes", dependencies=[Depends(user_api_key_auth)])
 async def get_routes():

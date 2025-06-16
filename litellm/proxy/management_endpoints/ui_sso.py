@@ -20,7 +20,7 @@ from fastapi.responses import RedirectResponse
 import litellm
 from litellm._logging import verbose_proxy_logger
 from litellm.caching import DualCache
-from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY
+from litellm.constants import MAX_SPENDLOG_ROWS_TO_QUERY, FRONTEND_URL
 from litellm.llms.custom_httpx.http_handler import (
     AsyncHTTPHandler,
     get_async_httpx_client,
@@ -602,7 +602,6 @@ async def auth_callback(request: Request):  # noqa: PLR0915
     key = response["token"]  # type: ignore
     user_id = response["user_id"]  # type: ignore
 
-    litellm_dashboard_ui = "/ui/"
     user_role = (
         user_defined_values["user_role"]
         or LitellmUserRoles.INTERNAL_USER_VIEW_ONLY.value
@@ -676,10 +675,11 @@ async def auth_callback(request: Request):  # noqa: PLR0915
         algorithm="HS256",
     )
     verbose_proxy_logger.info(f"user_id: {user_id}; jwt_token: {jwt_token}")
+    redirect_url = FRONTEND_URL
     if user_id is not None and isinstance(user_id, str):
-        litellm_dashboard_ui += "?login=success"
-    verbose_proxy_logger.info(f"Redirecting to {litellm_dashboard_ui}")
-    redirect_response = RedirectResponse(url=litellm_dashboard_ui, status_code=303)
+        redirect_url += "?login=success"
+    verbose_proxy_logger.info(f"Redirecting to {redirect_url}")
+    redirect_response = RedirectResponse(url=redirect_url, status_code=303)
     redirect_response.set_cookie(key="token", value=jwt_token, secure=True)
     return redirect_response
 
