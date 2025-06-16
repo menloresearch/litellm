@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 export const useBaseUrl = () => {
-  const [baseUrl, setBaseUrl] = useState("http://localhost:4000");
+  const [baseUrl, setBaseUrl] = useState(process.env.API_URL);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {

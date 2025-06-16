@@ -27,9 +27,7 @@ export async function makeOpenAIResponsesRequest(
     console.log = function () {};
   }
   
-  const proxyBaseUrl = isLocal
-    ? "http://localhost:4000"
-    : window.location.origin;
+  const proxyBaseUrl = process.env.API_URL;
   
   // Prepare headers with tags and trace ID
   const headers: Record<string, string> = {};
