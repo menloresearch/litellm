@@ -14,35 +14,15 @@ USER root
 # Install build dependencies
 RUN apk add --no-cache gcc python3-dev openssl openssl-dev
 
-
 RUN pip install --upgrade pip && \
     pip install build
 
 # Copy the current directory contents into the container at /app
+# TODO: only copy what's necessary
 COPY . .
-
-# Build Admin UI
-RUN chmod +x docker/build_admin_ui.sh && ./docker/build_admin_ui.sh
 
 # Build the package
 RUN rm -rf dist/* && python -m build
-
-# There should be only one wheel file now, assume the build only creates one
-RUN ls -1 dist/*.whl | head -1
-
-# Install the package
-RUN pip install dist/*.whl
-
-# install dependencies as wheels
-RUN pip wheel --no-cache-dir --wheel-dir=/wheels/ -r requirements.txt
-
-# ensure pyjwt is used, not jwt
-RUN pip uninstall jwt -y
-RUN pip uninstall PyJWT -y
-RUN pip install PyJWT==2.9.0 --no-cache-dir
-
-# Build Admin UI
-RUN chmod +x docker/build_admin_ui.sh && ./docker/build_admin_ui.sh
 
 # Runtime stage
 FROM $LITELLM_RUNTIME_IMAGE AS runtime
@@ -54,19 +34,20 @@ USER root
 RUN apk add --no-cache openssl tzdata
 
 WORKDIR /app
-# Copy the current directory contents into the container at /app
-COPY . .
-RUN ls -la /app
 
-# Copy the built wheel from the builder stage to the runtime stage; assumes only one wheel file is present
-COPY --from=builder /app/dist/*.whl .
-COPY --from=builder /wheels/ /wheels/
+# install dependencies
+COPY ./requirements.txt ./requirements.txt
+RUN pip install -r requirements.txt --no-cache-dir
 
-# Install the built wheel using pip; again using a wildcard if it's the only file
-RUN pip install *.whl /wheels/* --no-index --find-links=/wheels/ && rm -f *.whl && rm -rf /wheels
-
-# Generate prisma client
+# generate prisma client
+COPY ./schema.prisma ./schema.prisma
 RUN prisma generate
+
+# install wheels from builder stage
+COPY --from=builder /app/dist/*.whl .
+RUN pip install *.whl && rm -f *.whl
+
+COPY ./docker ./docker
 RUN chmod +x docker/entrypoint.sh
 RUN chmod +x docker/prod_entrypoint.sh
 

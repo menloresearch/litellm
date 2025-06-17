@@ -10,3 +10,5 @@ tests
 *.tgz
 log.txt
 docker/Dockerfile.*
+dist/
+ui/

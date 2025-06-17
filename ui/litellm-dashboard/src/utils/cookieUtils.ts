@@ -7,7 +7,8 @@
  */
 export function clearTokenCookies() {
   // Get the current domain
-  const domain = window.location.hostname;
+  // TODO: get COOKIE_DOMAIN from BE to make sure we clear cookies correctly
+  const domain = process.env.COOKIE_DOMAIN ?? window.location.hostname;
   
   // Clear with various combinations of path and SameSite
   const paths = ['/', '/ui'];

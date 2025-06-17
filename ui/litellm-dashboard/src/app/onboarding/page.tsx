@@ -83,8 +83,7 @@ export default function Onboarding() {
       userID,
       formValues.password
     ).then((data) => {
-      let litellm_dashboard_ui = "/ui/";
-      litellm_dashboard_ui += "?login=success";
+      let litellm_dashboard_ui = `${process.env.UI_BASE_URL}/?login=success`;
 
       // set cookie "token" to jwtToken
       document.cookie = "token=" + jwtToken;

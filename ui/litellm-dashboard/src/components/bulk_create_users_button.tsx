@@ -333,10 +333,11 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
           
           // Create invitation link for the user
           try {
+            const UI_BASE_URL = process.env.UI_BASE_URL ?? ''
             if (!uiSettings?.SSO_ENABLED) {
               // Regular invitation flow
               const invitationData = await invitationCreateCall(accessToken, user_id);
-              const invitationUrl = new URL(`/ui?invitation_id=${invitationData.id}`, baseUrl).toString();
+              const invitationUrl = new URL(`${UI_BASE_URL}?invitation_id=${invitationData.id}`, baseUrl).toString();
               
               setParsedData(current => 
                 current.map((u, i) => 
@@ -350,7 +351,7 @@ const BulkCreateUsersButton: React.FC<BulkCreateUsersProps> = ({
               );
             } else {
               // SSO flow - just use the base URL
-              const invitationUrl = new URL("/ui", baseUrl).toString();
+              const invitationUrl = new URL(UI_BASE_URL, baseUrl).toString();
               
               setParsedData(current => 
                 current.map((u, i) => 

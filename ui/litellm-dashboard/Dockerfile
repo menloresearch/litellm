@@ -1,0 +1,20 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+COPY . .
+ARG API_URL
+ENV API_URL=$API_URL
+ARG COOKIE_DOMAIN
+ENV COOKIE_DOMAIN=$COOKIE_DOMAIN
+RUN npm run build
+
+ENV NODE_ENV="production"
+ENV NEXT_TELEMETRY_DISABLED="1"
+ENV HOSTNAME="0.0.0.0"
+
+EXPOSE 3000
+CMD ["npm", "run", "start"]
