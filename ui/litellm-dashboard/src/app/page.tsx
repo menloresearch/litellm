@@ -362,8 +362,8 @@ export default function CreateKeyPage() {
                   premiumUser={premiumUser}
                   proxySettings={proxySettings}
                 />
-              ) : page == "api_ref" ? (
-                <APIRef proxySettings={proxySettings} />
+              // ) : page == "api_ref" ? (
+              //   <APIRef proxySettings={proxySettings} />
               ) : page == "settings" ? (
                 <Settings
                   userID={userID}

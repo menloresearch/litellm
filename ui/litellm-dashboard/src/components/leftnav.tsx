@@ -1,8 +1,5 @@
 import { Layout, Menu } from "antd";
-import Link from "next/link";
-import { List } from "postcss/lib/list";
-import { Text } from "@tremor/react";
-import { 
+import {
   KeyOutlined,
   PlayCircleOutlined,
   BlockOutlined,
@@ -14,17 +11,13 @@ import {
   ApiOutlined,
   AppstoreOutlined,
   DatabaseOutlined,
-  FileTextOutlined,
-  LineOutlined,
   LineChartOutlined,
   SafetyOutlined,
   ExperimentOutlined,
-  ThunderboltOutlined,
-  LockOutlined,
   ToolOutlined,
   TagsOutlined,
 } from '@ant-design/icons';
-import { old_admin_roles, v2_admin_role_names, all_admin_roles, rolesAllowedToSeeUsage, rolesWithWriteAccess, internalUserRoles } from '../utils/roles';
+import { all_admin_roles, rolesWithWriteAccess, internalUserRoles } from '../utils/roles';
 
 const { Sider } = Layout;
 
@@ -61,14 +54,14 @@ const Sidebar: React.FC<SidebarProps> = ({
     { key: "6", page: "teams", label: "Teams", icon: <TeamOutlined />, roles: all_admin_roles },
     { key: "17", page: "organizations", label: "Organizations", icon: <BankOutlined />, roles: all_admin_roles },
     { key: "5", page: "users", label: "Internal Users", icon: <UserOutlined />, roles: all_admin_roles },
-    { key: "14", page: "api_ref", label: "API Reference", icon: <ApiOutlined /> },
+    // { key: "14", page: "api_ref", label: "API Reference", icon: <ApiOutlined /> },
     { key: "16", page: "model-hub", label: "Model Hub", icon: <AppstoreOutlined /> },
     { key: "15", page: "logs", label: "Logs", icon: <LineChartOutlined />},
     { key: "11", page: "guardrails", label: "Guardrails", icon: <SafetyOutlined />, roles: all_admin_roles },
-    { 
-      key: "experimental", 
+    {
+      key: "experimental",
       page: "experimental",
-      label: "Experimental", 
+      label: "Experimental",
       icon: <ExperimentOutlined />,
       roles: all_admin_roles,
       children: [
@@ -116,7 +109,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const filteredMenuItems = menuItems.filter(item => {
     // Check if parent item has roles and user has access
     const hasParentAccess = !item.roles || item.roles.includes(userRole);
-    
+
     if (!hasParentAccess) return false;
 
     // Filter children if they exist
@@ -136,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <Menu
           mode="inline"
           selectedKeys={[selectedMenuKey]}
-          style={{ 
+          style={{
             borderRight: 0,
             backgroundColor: 'transparent',
             fontSize: '14px',
