@@ -2,10 +2,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
 import { Dropdown } from "antd";
-import { Organization } from "@/components/networking";
-import { defaultOrg } from "@/components/common_components/default_org";
-import { 
-  UserOutlined,
+import {
   LogoutOutlined
 } from '@ant-design/icons';
 import { clearTokenCookies } from "@/utils/cookieUtils";
@@ -71,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({
     }
   ];
 
-
+  const PLATFORM_URL = process.env.PLATFORM_URL ?? '';
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div className="w-full">
@@ -90,7 +87,15 @@ const Navbar: React.FC<NavbarProps> = ({
           {/* Right side nav items */}
           <div className="flex items-center space-x-5 ml-auto">
             <a
-              href="https://platform.menlo.ai/docs/"
+              href={`${PLATFORM_URL}/playground`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[13px] text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Playground
+            </a>
+            <a
+              href={`${PLATFORM_URL}/docs`}
               target="_blank"
               rel="noopener noreferrer"
               className="text-[13px] text-gray-600 hover:text-gray-900 transition-colors"
@@ -98,8 +103,8 @@ const Navbar: React.FC<NavbarProps> = ({
               Docs
             </a>
 
-            <Dropdown 
-              menu={{ 
+            <Dropdown
+              menu={{
                 items: userItems,
                 style: {
                   padding: '4px',
