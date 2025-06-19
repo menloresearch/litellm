@@ -51,6 +51,9 @@ COPY ./docker ./docker
 RUN chmod +x docker/entrypoint.sh
 RUN chmod +x docker/prod_entrypoint.sh
 
+ARG GIT_COMMIT=UNKNOWN
+ENV GIT_COMMIT=$GIT_COMMIT
+
 EXPOSE 4000/tcp
 
 ENTRYPOINT ["docker/prod_entrypoint.sh"]
