@@ -6,8 +6,9 @@ import functools
 @functools.lru_cache(1)
 def get_commit_hash():
     # GIT_COMMIT env var is available for Docker build
-    if "GIT_COMMIT" in os.environ:
-        return os.environ["GIT_COMMIT"]
+    val = os.environ.get("GIT_COMMIT", "").strip()
+    if val:
+        return val
 
     try:
         # git is available for local development

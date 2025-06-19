@@ -22,7 +22,7 @@ RUN pip install --upgrade pip && \
 COPY . .
 
 # Build the package
-RUN python rm -rf dist/* && python -m build
+RUN rm -rf dist/* && python -m build
 
 # Runtime stage
 FROM $LITELLM_RUNTIME_IMAGE AS runtime
