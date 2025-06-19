@@ -22,7 +22,7 @@ RUN pip install --upgrade pip && \
 COPY . .
 
 # Build the package
-RUN rm -rf dist/* && python -m build
+RUN python docker/update_commit_hash.py && rm -rf dist/* && python -m build
 
 # Runtime stage
 FROM $LITELLM_RUNTIME_IMAGE AS runtime

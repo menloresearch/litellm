@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional, cast
 
 import litellm
+from litellm._build_info import GIT_COMMIT
 from litellm._logging import print_verbose, verbose_logger
 from litellm.types.utils import StandardLoggingPayload
 
@@ -189,7 +190,7 @@ def get_s3_object_key(
         (s3_path.rstrip("/") + "/" if s3_path else "")
         + team_alias_prefix
         + start_time.strftime("%Y-%m-%d")
-        + "/"
+        + f"_{GIT_COMMIT}/"
         + s3_file_name
     )  # we need the s3 key to include the time, so we log cache hits too
     s3_object_key += ".json"
