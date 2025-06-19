@@ -22,7 +22,7 @@ RUN pip install --upgrade pip && \
 COPY . .
 
 # Build the package
-RUN python docker/update_commit_hash.py && rm -rf dist/* && python -m build
+RUN python rm -rf dist/* && python -m build
 
 # Runtime stage
 FROM $LITELLM_RUNTIME_IMAGE AS runtime
@@ -50,6 +50,9 @@ RUN pip install *.whl && rm -f *.whl
 COPY ./docker ./docker
 RUN chmod +x docker/entrypoint.sh
 RUN chmod +x docker/prod_entrypoint.sh
+
+ARG GIT_COMMIT=UNKNOWN
+ENV GIT_COMMIT=$GIT_COMMIT
 
 EXPOSE 4000/tcp
 
