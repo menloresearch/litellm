@@ -1,0 +1,24 @@
+name: CI - Deploy FE to stag env
+
+on:
+  push:
+    branches:
+      - v1.72.0-stable-dev
+    paths:
+      - "ui/litellm-dashboard/**"
+      - .github/workflows/fe-stag.yml
+      - .github/workflows/template-docker.yml
+
+jobs:
+  build-docker-x64:
+    uses: ./.github/workflows/template-docker.yml
+    secrets: inherit
+    with:
+      runs-on: ubuntu-24-04-docker
+      docker-file: ui/litellm-dashboard/Dockerfile
+      context: ui/litellm-dashboard
+      registry-url: registry.menlo.ai
+      tags: registry.menlo.ai/library/litellm-fe:stag-${{ github.sha }}
+      build-args: |
+        API_URL=https://api-stag.menlo.ai
+        COOKIE_DOMAIN=.menlo.ai

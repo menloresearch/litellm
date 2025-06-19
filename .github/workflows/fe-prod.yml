@@ -1,0 +1,29 @@
+name: CI - Deploy FE to prod env
+
+on:
+  push:
+    tags: ["v[0-9]+.[0-9]+.[0-9]+-fe*"]
+
+jobs:
+  get-tag:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.tag.outputs.tag }}
+    steps:
+      - name: Get tag
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+  build-docker-x64:
+    needs: get-tag
+    uses: ./.github/workflows/template-docker.yml
+    secrets: inherit
+    with:
+      runs-on: ubuntu-24-04-docker
+      docker-file: ui/litellm-dashboard/Dockerfile
+      context: ui/litellm-dashboard
+      registry-url: registry.menlo.ai
+      tags: registry.menlo.ai/library/litellm-fe:${{ needs.get-tag.outputs.new_version }}
+      build-args: |
+        API_URL=https://api.menlo.ai
+        COOKIE_DOMAIN=.menlo.ai
