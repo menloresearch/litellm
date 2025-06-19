@@ -1,0 +1,12 @@
+general_settings:
+  custom_sso: custom_sso.custom_sso_handler
+
+litellm_settings:
+  success_callback: ["s3"]
+  s3_callback_params:
+    s3_bucket_name: janwebdev
+    s3_region_name: us-east-2
+    s3_aws_access_key_id: os.environ/AWS_ACCESS_KEY_ID
+    s3_aws_secret_access_key: os.environ/AWS_SECRET_ACCESS_KEY
+    s3_path: litellm_logs
+    s3_endpoint_url: https://s3.menlo.ai
