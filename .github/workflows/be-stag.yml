@@ -20,3 +20,5 @@ jobs:
       context: .
       registry-url: registry.menlo.ai
       tags: registry.menlo.ai/library/litellm-be:stag-${{ github.sha }}
+      build-args: |
+        GIT_COMMIT=${{ github.sha }}
