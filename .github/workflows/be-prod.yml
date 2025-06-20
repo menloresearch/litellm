@@ -24,3 +24,5 @@ jobs:
       context: .
       registry-url: registry.menlo.ai
       tags: registry.menlo.ai/library/litellm-be:${{ needs.get-tag.outputs.new_version }}
+      build-args: |
+        GIT_COMMIT=${{ github.sha }}
