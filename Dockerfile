@@ -55,10 +55,11 @@ RUN chmod +x docker/prod_entrypoint.sh
 COPY custom_sso.py .
 
 ARG CONFIG_FILE=config.yaml
-COPY $CONFIG_FILE config.yaml
+COPY $CONFIG_FILE /app/config.yaml
 
 ARG GIT_COMMIT=UNKNOWN
 ENV GIT_COMMIT=$GIT_COMMIT
+RUN echo "GIT_COMMIT: ${GIT_COMMIT}"
 
 EXPOSE 4000/tcp
 
