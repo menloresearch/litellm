@@ -1,4 +1,5 @@
-FROM node:20-alpine
+# Stage 1: build UI
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -12,9 +13,14 @@ ARG COOKIE_DOMAIN
 ENV COOKIE_DOMAIN=$COOKIE_DOMAIN
 RUN npm run build
 
-ENV NODE_ENV="production"
-ENV NEXT_TELEMETRY_DISABLED="1"
-ENV HOSTNAME="0.0.0.0"
+# Stage 2: Use Nginx for serving
+FROM nginx:alpine AS production
+
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy static files from previous stage
+COPY --from=builder /app/out /usr/share/nginx/html
 
 EXPOSE 3000
-CMD ["npm", "run", "start"]
+CMD ["nginx", "-g", "daemon off;"]
