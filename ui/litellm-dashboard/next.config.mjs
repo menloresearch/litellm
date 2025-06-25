@@ -2,7 +2,7 @@
 const UI_BASE_PATH = process.env.UI_BASE_PATH || ''
 
 const nextConfig = {
-    // output: 'export',
+    output: 'export',
     basePath: UI_BASE_PATH,
 
     env: {
@@ -10,6 +10,9 @@ const nextConfig = {
         UI_BASE_PATH: UI_BASE_PATH,
         COOKIE_DOMAIN: process.env.COOKIE_DOMAIN,  // may be undefined
     },
+
+    // for static export
+    trailingSlash: true,
 };
 
 nextConfig.experimental = {
