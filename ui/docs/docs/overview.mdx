@@ -1,0 +1,62 @@
+---
+title: Overview
+description: Menlo API Documentation - Get started with our APIs in minutes.
+slug: /
+---
+
+import FeatureCard from '@site/src/components/FeatureCard';
+
+# Menlo API Documentation
+
+Welcome to Menlo's API documentation. Get started with our APIs and integrate powerful AI capabilities into your applications.
+
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 mb-12">
+  <FeatureCard
+    title="Get started"
+    description="Make your first API call in minutes."
+    href="/quickstart"
+    icon={
+      <svg className="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+      </svg>
+    }
+    iconBgColor="bg-blue-50 dark:bg-blue-900"
+  />
+  
+  <FeatureCard
+    title="Models"
+    description="Explore all available AI models and their capabilities."
+    href="/models"
+    icon={
+      <svg className="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+      </svg>
+    }
+    iconBgColor="bg-purple-50 dark:bg-purple-900"
+  />
+  
+  <FeatureCard
+    title="API reference"
+    description="Integrate and scale using our API and SDKs."
+    href="./api-reference"
+    icon={
+      <svg className="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+        <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+      </svg>
+    }
+    iconBgColor="bg-green-50 dark:bg-green-900"
+  />
+</div>
+
+## Key Features
+
+- **Chat Completion** - Generate responses using our language models
+- **Text-to-Speech** - Convert text to natural-sounding audio with Kokoro-TTS
+- **Speech-to-Text** - Transcribe audio files with Whisper-STT accuracy  
+
+
+## Available Models
+
+- **Jan-nano** - Compact 4B parameter model optimized for tool use and function calling
+- **Kokoro-TTS** - High-quality text-to-speech synthesis
+- **Whisper-STT** - Advanced speech recognition and transcription

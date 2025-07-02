@@ -1,0 +1,215 @@
+.sidebar-heading-link-title {
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  font-weight: 400 !important;
+}
+
+// .sidebar-heading {
+//   --scalar-sidebar-indent-base: 0px !important;
+// }
+
+.sidebar-group-title {
+  font-weight: 600 !important;
+  border-top: none !important;
+  font-size: 14px !important;
+  padding-left: 12px !important;
+}
+
+
+
+// API Documentation Styles
+.api-endpoint {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+
+  .method {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    &.post {
+      background-color: #10b981;
+      color: white;
+    }
+    
+    &.get {
+      background-color: #3b82f6;
+      color: white;
+    }
+    
+    &.put {
+      background-color: #f59e0b;
+      color: white;
+    }
+    
+    &.delete {
+      background-color: #ef4444;
+      color: white;
+    }
+  }
+
+  code {
+    font-weight: 500;
+    color: #374151;
+    background: transparent;
+    padding: 0;
+    border: none;
+  }
+}
+
+.api-documentation {
+  display: flex;
+  gap: 3rem;
+  margin-top: 2rem;
+  align-items: flex-start;
+  width: 100%;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.api-spec {
+  flex: 0 0 45%;
+  min-width: 0;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    
+    &:first-of-type {
+      margin-top: 0;
+    }
+    
+    .required {
+      color: #dc2626;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      background-color: #fef2f2;
+      padding: 0.125rem 0.25rem;
+      border-radius: 3px;
+    }
+    
+    .optional {
+      color: #6b7280;
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      margin-left: 0.5rem;
+      background-color: #f9fafb;
+      padding: 0.125rem 0.25rem;
+      border-radius: 3px;
+    }
+  }
+
+  p {
+    margin-bottom: 0.75rem;
+    color: #4b5563;
+    line-height: 1.6;
+    
+    strong {
+      color: #111827;
+    }
+  }
+
+  details {
+    margin: 1rem 0;
+    padding: 1rem;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    
+    summary {
+      cursor: pointer;
+      color: #3b82f6;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      
+      &:hover {
+        color: #2563eb;
+      }
+    }
+    
+    ul, ol {
+      margin-left: 1rem;
+      margin-top: 0.5rem;
+      
+      li {
+        margin-bottom: 0.25rem;
+        color: #4b5563;
+      }
+    }
+  }
+}
+
+.api-examples {
+  flex: 0 0 50%;
+  min-width: 0;
+  
+  h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+  }
+
+  pre {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .tabs-container {
+    margin-bottom: 2rem;
+  }
+  
+  // Override docusaurus tab styles for better spacing
+  .tabs__item {
+    padding: 0.5rem 1rem;
+  }
+  
+  .tabs__content {
+    margin-top: 0;
+  }
+  
+  // Ensure code blocks fit properly
+  .prism-code {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+// Ensure the main content container allows for flex layout
+article {
+  .api-documentation {
+    max-width: none;
+  }
+}

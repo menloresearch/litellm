@@ -1,0 +1,799 @@
+openapi: 3.0.3
+info:
+  title: Menlo Platform API
+  description: |
+    Complete API reference for Menlo Platform services providing advanced AI capabilities
+    including chat completions and audio processing.
+    
+    ## Features
+    - **Chat Completions**: OpenAI-compatible chat completion API with streaming support and advanced parameters
+    - **Audio Processing**: High-quality text-to-speech and speech-to-text conversion
+    
+    ## Authentication
+    All endpoints require authentication using Bearer tokens. Include your API key in the Authorization header:
+    ```
+    Authorization: Bearer <your-api-key>
+    ```
+    
+  version: 1.0.0
+  contact:
+    name: Menlo Platform Team
+    email: support@menlo.ai
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api-dev.menlo.ai
+    description: Development server
+  - url: https://api.menlo.ai
+    description: Production server (Work in Progress)
+
+security:
+  - bearerAuth: []
+
+paths:
+  # Chat Completions API
+  /v1/chat/completions:
+    post:
+      tags:
+        - Chat
+      summary: Create chat completion
+      description: |
+        Creates a model response for the given chat conversation with support for streaming,
+        tool calling, and advanced parameters. Compatible with OpenAI Chat Completions API.
+      operationId: createChatCompletion
+      x-codeSamples:
+        - lang: 'curl'
+          label: 'cURL'
+          source: |
+            curl https://api-dev.menlo.ai/v1/chat/completions \
+              -H "Authorization: Bearer <your-api-key>" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "model": "Jan-nano",
+                "messages": [
+                  {
+                    "role": "user",
+                    "content": "Hello!"
+                  }
+                ]
+              }'
+        - lang: 'python'
+          label: 'Python (OpenAI)'
+          source: |
+            import openai
+            
+            client = openai.OpenAI(
+                api_key="<your-api-key>",
+                base_url="https://api-dev.menlo.ai"
+            )
+            
+            response = client.chat.completions.create(
+                model="Jan-nano",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": "Hello!"
+                    }
+                ]
+            )
+            print(response)
+        - lang: 'javascript'
+          label: 'JavaScript (OpenAI)'
+          source: |
+            import OpenAI from 'openai';
+            
+            const client = new OpenAI({
+              apiKey: '<your-api-key>',
+              baseURL: 'https://api-dev.menlo.ai'
+            });
+            
+            const response = await client.chat.completions.create({
+              model: 'Jan-nano',
+              messages: [
+                {
+                  role: 'user',
+                  content: 'Hello!'
+                }
+              ]
+            });
+            console.log(response);
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                  example: "Jan-nano"
+                messages:
+                  type: array
+                  items:
+                    oneOf:
+                      - type: object
+                        title: SystemMessage
+                        required: [role, content]
+                        properties:
+                          role:
+                            type: string
+                            enum: [system]
+                            description: The role of the message author
+                          content:
+                            type: string
+                            description: The contents of the system message
+                      - type: object
+                        title: UserMessage
+                        required: [role, content]
+                        properties:
+                          role:
+                            type: string
+                            enum: [user]
+                            description: The role of the message author
+                          content:
+                            type: string
+                            description: The contents of the user message
+                          name:
+                            type: string
+                            description: An optional name for the participant
+                      - type: object
+                        title: AssistantMessage
+                        required: [role]
+                        properties:
+                          role:
+                            type: string
+                            enum: [assistant]
+                            description: The role of the message author
+                          content:
+                            type: string
+                            nullable: true
+                            description: The contents of the assistant message
+                          name:
+                            type: string
+                            description: An optional name for the participant
+                          tool_calls:
+                            type: array
+                            description: The tool calls generated by the model
+                            items:
+                              type: object
+                              required: [id, type, function]
+                              properties:
+                                id:
+                                  type: string
+                                  description: The ID of the tool call
+                                type:
+                                  type: string
+                                  enum: [function]
+                                  description: The type of the tool call
+                                function:
+                                  type: object
+                                  required: [name, arguments]
+                                  properties:
+                                    name:
+                                      type: string
+                                      description: The name of the function to call
+                                    arguments:
+                                      type: string
+                                      description: The arguments to call the function with, as generated by the model in JSON format
+                          refusal:
+                            type: string
+                            nullable: true
+                            description: The refusal message generated by the model
+                      - type: object
+                        title: ToolMessage
+                        required: [role, content, tool_call_id]
+                        properties:
+                          role:
+                            type: string
+                            enum: [tool]
+                            description: The role of the message author
+                          content:
+                            type: string
+                            description: The contents of the tool message
+                          tool_call_id:
+                            type: string
+                            description: Tool call that this message is responding to
+                stream:
+                  type: boolean
+                temperature:
+                  type: number
+            examples:
+              simple_chat:
+                summary: Simple chat completion
+                description: Basic chat completion with minimal parameters
+                value:
+                  model: "Jan-nano"
+                  messages:
+                    - role: "system"
+                      content: "You are a helpful assistant"
+                    - role: "user"
+                      content: "Hi"
+              streaming_chat:
+                summary: Streaming chat completion
+                description: Chat completion with streaming enabled
+                value:
+                  model: "Jan-nano"
+                  messages:
+                    - role: "system"
+                      content: "You are a helpful assistant."
+                    - role: "user"
+                      content: "Hello! How can I assist you today?"
+                  stream: true
+                  temperature: 0.7
+                  max_tokens: 150
+              advanced_chat:
+                summary: Advanced chat completion
+                description: Chat completion with all documented parameters
+                value:
+                  model: "Jan-nano"
+                  messages:
+                    - role: "system"
+                      content: "You are a helpful assistant"
+                    - role: "user"
+                      content: "Hi"
+                  frequency_penalty: 0
+                  max_tokens: 2048
+                  presence_penalty: 0
+                  response_format:
+                    type: "text"
+                  stop: null
+                  stream: false
+                  stream_options: null
+                  temperature: 1
+                  top_p: 1
+                  tools: null
+                  tool_choice: "none"
+                  logprobs: false
+                  top_logprobs: null
+      responses:
+        '200':
+          description: Chat completion response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  choices:
+                    type: array
+                    items:
+                      type: object
+              examples:
+                completion_response:
+                  summary: Standard completion response
+                  value:
+                    id: "chatcmpl-ac667bf99ec94895b26434e0ee1e68a0"
+                    object: "chat.completion"
+                    created: 1749796660
+                    model: "Jan-nano"
+                    choices:
+                      - index: 0
+                        message:
+                          role: "assistant"
+                          content: "Hello! I'm here to help you with any questions or tasks you might have. Whether you need assistance with information, creative writing, problem-solving, or just want to have a conversation, I'm ready to assist. What would you like to explore or work on today?"
+                          refusal: null
+                        logprobs: null
+                        finish_reason: "stop"
+                    usage:
+                      prompt_tokens: 19
+                      completion_tokens: 45
+                      total_tokens: 64
+                      prompt_tokens_details:
+                        cached_tokens: 0
+                      completion_tokens_details:
+                        reasoning_tokens: 0
+                        audio_tokens: 0
+                    system_fingerprint: null
+            text/event-stream:
+              schema:
+                type: string
+                description: Server-sent events stream for streaming responses
+                example: |
+                  data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"Jan-nano","choices":[{"index":0,"delta":{"role":"assistant","content":"Hello"},"logprobs":null,"finish_reason":null}]}
+                  
+                  data: {"id":"chatcmpl-123","object":"chat.completion.chunk","created":1694268190,"model":"Jan-nano","choices":[{"index":0,"delta":{"content":" there"},"logprobs":null,"finish_reason":null}]}
+                  
+                  data: [DONE]
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '429':
+          description: Rate limited
+        '500':
+          description: Internal server error
+
+  # Audio Text-to-Speech API
+  /v1/audio/speech:
+    post:
+      tags:
+        - Audio
+      summary: Create speech from text
+      description: |
+        Generates high-quality audio from input text using the Kokoro-TTS model.
+        Supports multiple voices, speeds, and audio formats.
+      operationId: createSpeech
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - input
+                - voice
+              properties:
+                model:
+                  type: string
+                  enum:
+                    - Kokoro-TTS
+                  description: The text-to-speech model to use
+                  example: "Kokoro-TTS"
+                input:
+                  type: string
+                  description: The text to generate audio for
+                  maxLength: 4096
+                  example: "Hello, this is a test of the text-to-speech system."
+                voice:
+                  type: string
+                  enum:
+                    - af_heart
+                    - af_bella
+                    - af_alloy
+                    - af_aoede
+                    - af_kore
+                    - af_nicole
+                    - af_nova
+                    - af_sarah
+                    - af_sky
+                    - am_fenrir
+                    - am_michael
+                  description: The voice to use for speech synthesis
+                  example: "af_alloy"
+                response_format:
+                  type: string
+                  enum: [mp3, opus, aac, flac, wav, pcm]
+                  default: mp3
+                  description: The format of the audio output
+                speed:
+                  type: number
+                  minimum: 0.25
+                  maximum: 4.0
+                  default: 1.0
+                  description: The speed of the generated audio. Select a value from 0.25 to 4.0
+            examples:
+              basic_speech:
+                summary: Basic text-to-speech
+                description: Convert text to speech with default settings
+                value:
+                  model: "Kokoro-TTS"
+                  input: "Hello, this is a test of the text-to-speech system."
+                  voice: "af_alloy"
+              custom_speech:
+                summary: Customized speech generation
+                description: Text-to-speech with custom voice and speed
+                value:
+                  model: "Kokoro-TTS"
+                  input: "Goal: Ensure that the chatbot correctly responds to user queries with accurate and helpful information."
+                  voice: "af_alloy"
+                  speed: 1.0
+                  response_format: "mp3"
+      responses:
+        '200':
+          description: Audio generated successfully
+          content:
+            audio/mpeg:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in MP3 format
+            audio/wav:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in WAV format
+            audio/ogg:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in OGG format
+            audio/flac:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in FLAC format
+            audio/aac:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in AAC format
+            audio/opus:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in Opus format
+            audio/pcm:
+              schema:
+                type: string
+                format: binary
+                description: Generated audio file in PCM format
+          headers:
+            Content-Type:
+              description: MIME type of the audio file
+              schema:
+                type: string
+                example: "audio/mpeg"
+            Content-Length:
+              description: Size of the audio file in bytes
+              schema:
+                type: integer
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '413':
+          description: Input text too long
+          content:
+            application/json:
+              schema:
+                type: object
+        '500':
+          description: Internal server error
+
+  # Audio Speech-to-Text API
+  /v1/audio/transcriptions:
+    post:
+      tags:
+        - Audio
+      summary: Create transcription from audio
+      description: |
+        Transcribes audio files into text using the Whisper-STT speech recognition model.
+        Supports multiple audio formats, languages, and output formats including timestamps.
+      operationId: createTranscription
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - model
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: |
+                    The audio file object (not file name) to transcribe, in one of these formats: 
+                    flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm.
+                model:
+                  type: string
+                  enum:
+                    - whisper-stt
+                  description: The speech-to-text model to use
+                  example: "whisper-stt"
+                language:
+                  type: string
+                  description: |
+                    The language of the input audio. Supplying the input language in ISO-639-1 format 
+                    will improve accuracy and latency.
+                  example: "en"
+                prompt:
+                  type: string
+                  description: |
+                    An optional text to guide the model's style or continue a previous audio segment. 
+                    The prompt should match the audio language.
+                response_format:
+                  type: string
+                  enum: [json, text, srt, verbose_json, vtt]
+                  default: json
+                  description: |
+                    The format of the transcript output, in one of these options: json, text, srt, 
+                    verbose_json, or vtt.
+                temperature:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0
+                  description: |
+                    The sampling temperature, between 0 and 1. Higher values like 0.8 will make the 
+                    output more random, while lower values like 0.2 will make it more focused and 
+                    deterministic.
+                timestamp_granularities:
+                  type: array
+                  items:
+                    type: string
+                    enum: [word, segment]
+                  default: [segment]
+                  description: |
+                    The timestamp granularities to populate for this transcription. response_format 
+                    must be set verbose_json to use timestamp granularities. Either or both of these 
+                    options are supported: word, or segment.
+            examples:
+              basic_transcription:
+                summary: Basic audio transcription
+                description: Transcribe audio file to text
+                value:
+                  file: "@/path/to/file/audio.mp3"
+                  model: "whisper-stt"
+                  response_format: "json"
+                  temperature: "0"
+                  language: "en"
+              detailed_transcription:
+                summary: Detailed transcription with timestamps
+                description: Transcribe with word-level timestamps
+                value:
+                  file: "@/path/to/audio.wav"
+                  model: "whisper-stt"
+                  language: "en"
+                  response_format: "verbose_json"
+                  timestamp_granularities: ["word", "segment"]
+                  temperature: "0"
+      responses:
+        '200':
+          description: Audio transcribed successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      text:
+                        type: string
+                        description: The transcribed text
+                        example: "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100, a 1,000 times bigger."
+                  - type: object
+                    properties:
+                      task:
+                        type: string
+                        enum: [transcribe]
+                        description: The type of task performed
+                      language:
+                        type: string
+                        description: The detected or specified language of the audio
+                        example: "english"
+                      duration:
+                        type: number
+                        description: The duration of the audio in seconds
+                        example: 8.470000267028809
+                      text:
+                        type: string
+                        description: The transcribed text
+                        example: "The beach was a popular spot on a hot summer day."
+                      words:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            word:
+                              type: string
+                              example: "beach"
+                            start:
+                              type: number
+                              example: 0.36000001430511475
+                            end:
+                              type: number
+                              example: 0.76000004529953
+                        description: Array of word-level timestamps (when word granularity is requested)
+                      segments:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 0
+                            start:
+                              type: number
+                              example: 0.0
+                            end:
+                              type: number
+                              example: 8.470000267028809
+                            text:
+                              type: string
+                              example: " The beach was a popular spot on a hot summer day."
+                        description: Array of segment-level timestamps
+              examples:
+                simple_transcription:
+                  summary: Simple transcription response
+                  value:
+                    text: "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100, a 1,000 times bigger. This is a place where you can get to do that."
+                verbose_transcription:
+                  summary: Verbose transcription with timestamps
+                  value:
+                    task: "transcribe"
+                    language: "english"
+                    duration: 8.470000267028809
+                    text: "The beach was a popular spot on a hot summer day. People were swimming and playing in the water."
+                    words:
+                      - word: "The"
+                        start: 0.11999999731779099
+                        end: 0.36000001430511475
+                      - word: "beach"
+                        start: 0.36000001430511475
+                        end: 0.76000004529953
+                    segments:
+                      - id: 0
+                        seek: 0
+                        start: 0.0
+                        end: 8.470000267028809
+                        text: " The beach was a popular spot on a hot summer day. People were swimming and playing in the water."
+                        tokens: [50364, 440, 7534, 390, 257, 3743, 4008, 322, 257, 2368, 4266, 1110, 13, 3432, 645, 15966, 293, 2433, 294, 264, 1281, 13, 50788]
+                        temperature: 0.0
+                        avg_logprob: -0.2860786020755768
+                        compression_ratio: 1.2363636493682861
+                        no_speech_prob: 0.00985979475080967
+            text/plain:
+              schema:
+                type: string
+                description: Plain text transcription
+            text/vtt:
+              schema:
+                type: string
+                description: WebVTT subtitle format
+            application/x-subrip:
+              schema:
+                type: string
+                description: SRT subtitle format
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '413':
+          description: Audio file too large
+          content:
+            application/json:
+              schema:
+                type: object
+        '415':
+          description: Unsupported audio format
+        '500':
+          description: Internal server error
+
+  # Models API
+  /v1/models:
+    get:
+      tags:
+        - Models
+      summary: List available models
+      description: |
+        Lists the currently available models, and provides basic information about each one
+        such as the owner and availability.
+      operationId: listModels
+      x-codeSamples:
+        - lang: 'curl'
+          label: 'cURL'
+          source: |
+            curl -X 'GET' \
+              'https://api-dev.menlo.ai/v1/models' \
+              -H 'accept: application/json' \
+              -H 'Authorization: Bearer YOUR_API_KEY_HERE'
+        - lang: 'python'
+          label: 'Python (OpenAI)'
+          source: |
+            import openai
+            
+            client = openai.OpenAI(
+                api_key="YOUR_API_KEY_HERE",
+                base_url="https://api-dev.menlo.ai"
+            )
+            
+            models = client.models.list()
+            print(models)
+        - lang: 'javascript'
+          label: 'JavaScript (OpenAI)'
+          source: |
+            import OpenAI from 'openai';
+            
+            const client = new OpenAI({
+              apiKey: 'YOUR_API_KEY_HERE',
+              baseURL: 'https://api-dev.menlo.ai'
+            });
+            
+            const models = await client.models.list();
+            console.log(models);
+      responses:
+        '200':
+          description: List of available models
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - id
+                        - object
+                        - owned_by
+                      properties:
+                        id:
+                          type: string
+                          description: The model identifier
+                          example: "Jan-nano"
+                        object:
+                          type: string
+                          enum: [model]
+                          description: The object type, which is always "model"
+                          example: "model"
+                        owned_by:
+                          type: string
+                          description: The organization that owns the model
+                          example: "openai"
+              examples:
+                models_response:
+                  summary: Available models response
+                  value:
+                    data:
+                      - id: "Jan_Nano_8bit"
+                        object: "model"
+                        owned_by: "openai"
+                      - id: "kokoro-tts"
+                        object: "model"
+                        owned_by: "openai"
+                      - id: "Jan-nano"
+                        object: "model"
+                        owned_by: "openai"
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Include your API key in the Authorization header:
+        ```
+        Authorization: Bearer <your-api-key>
+        ```
+
+tags:
+  - name: Chat
+    description: |
+      ## Chat Completion APIs
+      
+      Generate AI responses for conversations with support for streaming, tool calling, and advanced parameters.
+      
+      **Features:**
+      - OpenAI-compatible chat completion API
+      - Real-time streaming with Server-Sent Events
+      - Advanced parameters for fine-tuning responses
+      - Tool calling and function execution support
+      
+  - name: Audio
+    description: |
+      ## Audio Processing APIs
+      
+      High-quality text-to-speech generation and speech-to-text transcription services.
+      
+      **Features:**
+      - Multiple voice options for TTS
+      - Support for various audio formats
+      - Accurate speech recognition with Whisper
+      - Timestamp granularity options
+  - name: Models
+    description: |
+      ## Models API
+      
+      List and retrieve information about the available models offered by the API.
+      
+      **Features:**
+      - List all available models
+      - Get model metadata and availability
+      - Compatible with OpenAI Models API
+
+externalDocs:
+  description: Menlo Platform Documentation
+  url: https://docs.menlo.ai

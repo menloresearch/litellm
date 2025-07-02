@@ -1,0 +1,265 @@
+---
+title: Models
+description: Explore all available models in the Menlo API platform.
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Models
+
+Menlo provides access to a variety of AI models for different use cases. Choose the right model based on your specific needs.
+
+## Chat Completion Models
+
+<div className="model-cards">
+
+<div className="model-card">
+<div className="model-header">
+<h3>Jan-nano: Compact tool-use specialist model</h3>
+</div>
+
+<details>
+<summary>**What it does**</summary>
+
+A 4 billion parameter model optimized for tool use and function calling. Best for applications requiring structured responses, API interactions, and precise tool execution while maintaining efficiency.
+
+</details>
+
+<details>
+<summary>**Usage**</summary>
+
+<Tabs>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl https://api-dev.menlo.ai/v1/chat/completions \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Jan-nano",
+    "messages": [
+      {
+        "role": "user",
+        "content": "What is the weather like today?"
+      }
+    ]
+  }'
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import openai
+
+client = openai.OpenAI(
+    api_key="<your-api-key>",
+    base_url="https://api-dev.menlo.ai"
+)
+
+response = client.chat.completions.create(
+    model="Jan-nano",
+    messages=[
+        {
+            "role": "user", 
+            "content": "What is the weather like today?"
+        }
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+</div>
+
+</div>
+
+## Audio Models
+
+<div className="model-cards">
+
+<div className="model-card">
+<div className="model-header">
+<h3>Kokoro-TTS: High-quality text-to-speech conversion</h3>
+</div>
+
+<details>
+<summary>**What it does**</summary>
+
+Standard quality text-to-speech model supporting multiple voices and output formats. Best for generating natural-sounding speech from text input.
+
+**Supported Voices:** `af_heart`, `af_bella`, `af_alloy`, `af_aoede`, `af_kore`, `af_nicole`, `af_nova`, `af_sarah`, `af_sky`, `am_fenrir`, `am_michael`
+
+**Output Formats:** `mp3`, `opus`, `aac`, `flac`, `wav`, `pcm`
+
+</details>
+
+<details>
+<summary>**Usage**</summary>
+
+<Tabs>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl https://api-dev.menlo.ai/v1/audio/speech \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "kokoro-tts",
+    "input": "Hello, this is a test of our text-to-speech system.",
+    "voice": "af_alloy",
+    "response_format": "mp3"
+  }' \
+  --output speech.mp3
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import openai
+
+client = openai.OpenAI(
+    api_key="<your-api-key>",
+    base_url="https://api-dev.menlo.ai"
+)
+
+response = client.audio.speech.create(
+    model="kokoro-tts",
+    voice="af_alloy",
+    input="Hello, this is a test of our text-to-speech system.",
+    response_format="mp3"
+)
+
+with open("speech.mp3", "wb") as f:
+    f.write(response.content)
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+</div>
+
+<div className="model-card">
+<div className="model-header">
+<h3>Whisper-STT: Advanced speech recognition and transcription</h3>
+</div>
+
+<details>
+<summary>**What it does**</summary>
+
+Advanced speech recognition model based on OpenAI's Whisper. Best for audio transcription and voice-to-text conversion with support for multiple languages and automatic detection.
+
+**Supported Formats:** `flac`, `mp3`, `mp4`, `mpeg`, `mpga`, `m4a`, `ogg`, `wav`, `webm`
+
+</details>
+
+<details>
+<summary>**Usage**</summary>
+
+<Tabs>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl https://api-dev.menlo.ai/v1/audio/transcriptions \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: multipart/form-data" \
+  -F "file=@audio.mp3" \
+  -F "model=whisper-stt" \
+  -F "language=en"
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import openai
+
+client = openai.OpenAI(
+    api_key="<your-api-key>",
+    base_url="https://api-dev.menlo.ai"
+)
+
+with open("audio.mp3", "rb") as audio_file:
+    response = client.audio.transcriptions.create(
+        model="whisper-stt",
+        file=audio_file,
+        language="en"
+    )
+
+print(response.text)
+```
+
+</TabItem>
+</Tabs>
+
+</details>
+
+</div>
+
+</div>
+
+## Get All Models
+
+Lists the currently available models, and provides basic information about each one such as the owner and availability.
+
+<Tabs>
+<TabItem value="curl" label="cURL">
+
+```bash
+curl -X 'GET' \
+  'https://api-dev.menlo.ai/v1/models' \
+  -H 'accept: application/json' \
+  -H 'Authorization: Bearer <your-api-key>'
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+import openai
+
+client = openai.OpenAI(
+    api_key="<your-api-key>",
+    base_url="https://api-dev.menlo.ai"
+)
+
+models = client.models.list()
+print(models)
+```
+
+</TabItem>
+<TabItem value="javascript" label="JavaScript">
+
+```javascript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+  apiKey: '<your-api-key>',
+  baseURL: 'https://api-dev.menlo.ai'
+});
+
+const models = await client.models.list();
+console.log(models);
+```
+
+</TabItem>
+</Tabs>
+
+## Rate Limits
+
+
+
+All models are subject to rate limiting based on your API plan. Contact our team for information about increased limits for production use cases.
+
+## Need Help?
+
+Have questions about which model to use? Reach out to the Platform team on Discord at `#platform-internal`

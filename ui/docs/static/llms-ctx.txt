@@ -1,0 +1,166 @@
+<project title="Menlo Platform" summary="Menlo Platform provides AI capabilities through its API, including chat completions, text-to-speech, and speech-to-text services. It offers various models like Jan-nano for chat completions, Kokoro-TTS for text-to-speech, and Whisper-STT for speech-to-text, enabling developers to integrate powerful AI features into their applications.">
+
+Key things to remember when working with Menlo APIs:
+
+- API keys for authentication
+- Multiple models for different use cases
+- Rate limits based on API plan
+- Support for text, images, and audio in chat completions
+
+Available Models:
+- **Jan-nano**: A 4 billion parameter model optimized for tool use and function calling. Best for applications requiring structured responses, API interactions, and precise tool execution while maintaining efficiency. (structured responses, API interactions, tool execution)
+- **Kokoro-TTS**: High-quality text-to-speech model supporting multiple voices and output formats. Best for generating natural-sounding speech from text input. (text-to-speech, multiple voices, natural-sounding speech)
+- **Whisper-STT**: Advanced speech recognition model based on OpenAI's Whisper. Best for audio transcription and voice-to-text conversion with support for multiple languages and automatic detection. (speech recognition, audio transcription, multiple languages)
+
+## Chat Completion
+
+Creates a model response for the given chat conversation.
+
+```bash
+curl https://api-dev.menlo.ai/v1/chat/completions \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Jan-nano",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a helpful assistant"
+      },
+      {
+        "role": "user",
+        "content": "Hi"
+      }
+    ],
+    "frequency_penalty": 0,
+    "max_tokens": 2048,
+    "presence_penalty": 0,
+    "response_format": {
+      "type": "text"
+    },
+    "stop": null,
+    "stream": false,
+    "stream_options": null,
+    "temperature": 1,
+    "top_p": 1,
+    "tools": null,
+    "tool_choice": "none",
+    "logprobs": false,
+    "top_logprobs": null
+  }'
+```
+
+Parameters:
+- **messages** (required): A list of messages comprising the conversation so far. (type: array) (constraints: Each message object must contain 'role' (system, user, or assistant) and 'content'.)
+- **model** (required): Model ID used to generate the response. (type: string) (constraints: Refer to the model guide for available models.)
+- **frequency_penalty** (optional): Penalizes new tokens based on their existing frequency in the text. (type: number) (default: 0) (constraints: Between -2.0 and 2.0.)
+- **max_tokens** (optional): The maximum number of tokens that can be generated. (type: integer) (constraints: Limited by the model's context length.)
+- **presence_penalty** (optional): Penalizes new tokens based on whether they appear in the text so far. (type: number) (default: 0) (constraints: Between -2.0 and 2.0.)
+- **temperature** (optional): Controls the randomness of the output. (type: number) (default: 1) (constraints: Between 0 and 2.)
+- **top_p** (optional): An alternative to sampling with temperature, called nucleus sampling. (type: number) (default: 1) (constraints: Between 0 and 1.)
+- **response_format** (optional): Specifies the format that the model must output. (type: object) (default: { "type": "text" }) (constraints: Can be set to { "type": "json_object" } for JSON mode.)
+- **stop** (optional): Sequences where the API will stop generating further tokens. (type: string or array) (constraints: Up to 4 sequences.)
+- **stream** (optional): If set, partial message deltas will be sent. (type: boolean) (default: false)
+- **stream_options** (optional): Options for streaming response. (type: object) (constraints: Only set when stream is true.)
+- **tools** (optional): A list of tools the model may call. (type: array) (constraints: Currently, only functions are supported.)
+- **tool_choice** (optional): Controls which (if any) tool is called by the model. (type: string or object) (default: "none") (constraints: "none" means no tool is called, "auto" means the model can pick.)
+- **logprobs** (optional): Whether to return log probabilities of the output tokens. (type: boolean) (default: false)
+- **top_logprobs** (optional): The number of most likely tokens to return at each token position. (type: integer) (constraints: Between 1 and 20, requires logprobs to be true.)
+
+Example Response:
+```json
+{
+  "id": "chatcmpl-ac667bf99ec94895b26434e0ee1e68a0",
+  "object": "chat.completion",
+  "created": 1749796660,
+  "model": "Jan-nano",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "Hello! I'm here to help you with any questions or tasks you might have. Whether you need assistance with information, creative writing, problem-solving, or just want to have a conversation, I'm ready to assist. What would you like to explore or work on today?",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 19,
+    "completion_tokens": 45,
+    "total_tokens": 64,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "system_fingerprint": null
+}
+```
+
+## Text-to-Speech
+
+Generates audio from the input text.
+
+```bash
+curl https://api-dev.menlo.ai/v1/audio/speech \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Kokoro-TTS",
+    "input": "Goal: Ensure that the chatbot correctly responds to user queries with accurate and helpful information.",
+    "voice": "af_alloy",
+    "speed": 1.0,
+    "response_format": "mp3"
+  }' \
+  --output speech.mp3
+```
+
+Parameters:
+- **model** (required): The ID of the text-to-speech model to use for generating audio. (type: string) (constraints: Currently, only 'Kokoro-TTS' is available.)
+- **input** (required): The text content to convert into speech. (type: string) (constraints: Must not exceed 4096 characters in length.)
+- **voice** (required): The voice to use for speech synthesis. (type: string) (constraints: Supported voices include 'af_heart', 'af_bella', 'af_alloy', 'af_aoede', 'af_kore', 'af_nicole', 'af_nova', 'af_sarah', 'af_sky', 'am_fenrir', 'am_michael'.)
+- **response_format** (optional): The audio format for the generated speech output. (type: string) (default: "mp3") (constraints: Supported formats include 'mp3', 'opus', 'aac', 'flac', 'wav', 'pcm'.)
+- **speed** (optional): The playback speed of the generated audio. (type: number) (default: 1.0) (constraints: Between 0.25 and 4.0.)
+
+Example Response:
+```json
+The API returns the generated audio file in the specified format.
+```
+
+## Speech-to-Text
+
+Transcribes audio into the input language.
+
+```bash
+curl https://api-dev.menlo.ai/v1/audio/transcriptions \
+  -H "Authorization: Bearer <your-api-key>" \
+  -H "Content-Type: multipart/form-data" \
+  -F file="@/path/to/file/audio.mp3" \
+  -F model="whisper-stt" \
+  -F response_format="json" \
+  -F temperature="0" \
+  -F language="en"
+```
+
+Parameters:
+- **file** (required): The audio file object to transcribe. (type: file) (constraints: Supported formats: 'flac', 'mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'ogg', 'wav', 'webm'.)
+- **model** (required): The ID of the model to use for transcription. (type: string) (constraints: Currently, only 'whisper-stt' is available.)
+- **language** (optional): The language of the input audio in ISO-639-1 format. (type: string) (constraints: e.g., 'en' for English.)
+- **prompt** (optional): An optional text prompt to guide the model's transcription style. (type: string)
+- **response_format** (optional): The format of the transcription output. (type: string) (default: "json") (constraints: Supported formats include 'json', 'text', 'srt', 'verbose_json', 'vtt'.)
+- **temperature** (optional): The sampling temperature for controlling the randomness of the transcription output. (type: number) (default: 0) (constraints: Between 0 and 1.)
+- **timestamp_granularities** (optional): The timestamp granularities to include in the transcription response. (type: array) (default: ["segment"]) (constraints: Can specify '["word"]', '["segment"]', or both '["word", "segment"]'.)
+
+Example Response:
+```json
+{
+  "text": "Imagine the wildest idea that you've ever had, and you're curious about how it might scale to something that's a 100, a 1,000 times bigger. This is a place where you can get to do that."
+}
+```
+
+</project>

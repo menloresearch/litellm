@@ -1,0 +1,82 @@
+---
+title: Quickstart
+description: Get started with the Menlo API in minutes.
+slug: quickstart
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Quickstart
+
+Get started with the Menlo API and make your first API call in minutes.
+
+## Base URL
+
+All API requests should be made to `https://api-dev.menlo.ai`.
+
+
+## Authentication
+
+The Menlo API uses API keys for authentication. To get an API key, login via Google SSO [here](https://platform-dev.menlo.ai).
+
+
+## Make Your First API Call
+
+Try making a chat completion request to get started:
+
+<Tabs>
+<TabItem value="curl" label="cURL" default>
+
+```bash
+curl https://api-dev.menlo.ai/v1/chat/completions \
+  -H "Authorization: Bearer <your-api-key-here>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "Jan-nano",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hello"
+      }
+    ]
+  }'
+```
+
+</TabItem>
+<TabItem value="python" label="Python">
+
+```python
+# pip install openai
+import openai
+client = openai.OpenAI(
+    api_key="<your-api-key-here",
+    base_url="https://api-dev.menlo.ai" 
+)
+response = client.chat.completions.create(
+    model="Jan-nano", # model to send to the proxy
+    messages = [
+        {
+            "role": "user",
+            "content": "this is a test request, write a short poem"
+        }
+    ]
+)
+print(response)
+```
+
+</TabItem>
+</Tabs>
+
+## Next Steps
+
+- Explore the [API Reference](./api-reference) for detailed endpoint documentation
+- Learn about available [models](/models) and their capabilities
+
+## Getting help from AI
+
+Need context for AI assistants? Check out our <a href="/llms-ctx.txt" target="_blank">AI context file</a> with links and information to help AI understand the Menlo platform better.
+
+## Need Help?
+
+Have questions? Reach out to the Platform team on Discord at `#platform-internal`
