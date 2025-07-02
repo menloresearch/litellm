@@ -15,6 +15,8 @@ COPY litellm-dashboard/package*.json ./
 RUN npm ci --only=production
 COPY litellm-dashboard/ ./
 ENV UI_BASE_PATH=/dashboard
+ARG API_URL=http://localhost:4000
+ENV API_URL=$API_URL
 RUN npm run build
 
 # Production stage with nginx
