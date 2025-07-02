@@ -6,6 +6,7 @@ WORKDIR /app/docs
 COPY docs/package*.json ./
 RUN npm ci --only=production
 COPY docs/ ./
+ENV DOCUSAURUS_BASE_URL=/docs/
 RUN npm run build
 
 # Install dependencies and build dashboard
@@ -13,6 +14,7 @@ WORKDIR /app/dashboard
 COPY litellm-dashboard/package*.json ./
 RUN npm ci --only=production
 COPY litellm-dashboard/ ./
+ENV UI_BASE_PATH=/dashboard
 RUN npm run build
 
 # Production stage with nginx
