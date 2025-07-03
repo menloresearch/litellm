@@ -398,27 +398,41 @@ If you have suggestions on how to improve the code quality feel free to open an 
 
 
 ## Run in Developer mode
-### Services
-1. Setup .env file in root
-2. Run dependant services `docker compose up db prometheus -d`
 
 ### Frontend
-1. Navigate to `ui/litellm-dashboard`
-2. Install dependencies `npm install`
-3. Run `npm run dev` to start the dashboard at `localhost:3000`
+
+```bash
+cd ui/litellm-dashboard
+npm install
+npm run dev
+```
+
+The dashboard lives at `localhost:3000`
 
 ### Backend
-1. Create virtual environment `uv venv --python=3.13` and `source .venv/bin/activate`
-2. Install the proxy and extra dependencies `uv pip install -e ".[proxy]"` and `uv pip install -r requirements.txt`
-3. Run `prisma generate`
-4. Set `DATABASE_URL=postgresql://llmproxy:dbpassword9090@localhost:5432/litellm` and `STORE_MODEL_IN_DB=True` (from `docker-compose.yml`)
-5. Start proxy backend `LITELLM_MODE=DEV litellm --config=config.yaml` at `localhost:4000` (`LITELLM_MODE=DEV` is optional, to load `.env`)
 
-Now you can go to `localhost:3000/ui` for the dashboard UI. Some pages live at backend e.g. `localhost:4000/login`.
+```bash
+# start local DB
+docker compose up db -d
 
-To test deployment
+# set up environment
+uv venv --python=3.13
+source .venv/bin/activate
+uv pip install -e ".[proxy]"
+uv pip install -r requirements.txt
 
+prisma generate
+
+# copy example .env file
+cp .env.example .env
+
+# launch BE server at localhost:4000
+LITELLM_MODE=DEV litellm --config=config.yaml
 ```
+
+### Local deployment
+
+```bash
 docker compose build --parallel
 docker compose up
 ```
