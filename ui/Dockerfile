@@ -1,15 +1,14 @@
-# Multi-stage build for LiteLLM UI (Dashboard + Docs)
-FROM node:18-alpine AS builder
-
-# Install dependencies and build docs
-WORKDIR /app/docs
+# Stage 1: Build docs independently
+FROM node:18-alpine AS docs-builder
+WORKDIR /app
 COPY docs/package*.json ./
 RUN npm ci --only=production
 COPY docs/ ./
 RUN npm run build
 
-# Install dependencies and build dashboard, to change API_URL in prod. 
-WORKDIR /app/dashboard
+# Stage 2: Build dashboard independently
+FROM node:18-alpine AS dashboard-builder
+WORKDIR /app
 COPY litellm-dashboard/package*.json ./
 RUN npm ci --only=production
 COPY litellm-dashboard/ ./
@@ -18,12 +17,12 @@ ARG API_URL=http://localhost:4000
 ENV API_URL=$API_URL
 RUN npm run build
 
-# Production stage with nginx
+# Stage 3: Production with nginx
 FROM nginx:alpine
 
-# Copy built static files
-COPY --from=builder /app/docs/build /usr/share/nginx/html/docs
-COPY --from=builder /app/dashboard/out /usr/share/nginx/html/dashboard
+# Copy built static files from separate builders
+COPY --from=docs-builder /app/build /usr/share/nginx/html/docs
+COPY --from=dashboard-builder /app/out /usr/share/nginx/html/dashboard
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf

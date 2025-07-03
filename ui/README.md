@@ -68,6 +68,11 @@ npm run dev  # Runs on http://localhost:3001
 
 ## 🏗️ Architecture
 
+### Docker Multi-Stage Build
+- **Stage 1** (`docs-builder`): Builds Docusaurus documentation independently
+- **Stage 2** (`dashboard-builder`): Builds Next.js dashboard independently  
+- **Stage 3** (`production`): Combines both outputs and serves with nginx
+
 ### Frontend Container (`localhost`)
 - **Nginx** serves static files
 - **Docs** built from Docusaurus → `/docs` route
@@ -179,6 +184,24 @@ curl http://localhost/health
 # 5. Repeat from step 1
 ```
 
+### Build Optimization
+
+The multi-stage Dockerfile provides efficient caching:
+- **Docs only changes**: Only `docs-builder` stage rebuilds
+- **Dashboard only changes**: Only `dashboard-builder` stage rebuilds
+- **Both unchanged**: Both stages use Docker cache (fast builds)
+
+```bash
+# Example: Change docs and rebuild (dashboard uses cache)
+echo "# Update" >> docs/README.md
+docker build -t litellm-ui:latest .  # Only docs-builder rebuilds
+
+# Example: Change dashboard and rebuild (docs uses cache)  
+git checkout docs/README.md
+echo "// Update" >> litellm-dashboard/src/components/constants.tsx
+docker build -t litellm-ui:latest .  # Only dashboard-builder rebuilds
+```
+
 ## 🐛 Troubleshooting
 
 ### Dashboard Shows Onboarding/Login Issues
@@ -190,6 +213,7 @@ curl http://localhost/health
 - Ensure both `docs/` and `litellm-dashboard/` have `package.json`
 - Check if dependencies install correctly
 - Try building each app separately first
+- **Multi-stage builds**: If one stage fails, check specific stage logs
 
 ### Routes Not Working
 - Check nginx.conf for routing issues
