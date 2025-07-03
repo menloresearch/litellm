@@ -102,7 +102,7 @@ const config: Config = {
   ],
 
   // Set the production url of your site here
-  url: "https://cortex.so",
+  url: "https://menlo.ai",
   // Set the /<baseUrl>/ pathname under which your site is served
   // Development: serve at root, Production: serve under /docs/ (handled by nginx)
   baseUrl: process.env.NODE_ENV === 'production' ? '/docs/' : '/',
@@ -116,8 +116,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "janhq", // Usually your GitHub org/user name.
-  projectName: "cortex", // Usually your repo name.
+  organizationName: "Menlo", // Usually your GitHub org/user name.
+  projectName: "platform", // Usually your repo name.
 
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
@@ -167,7 +167,7 @@ const config: Config = {
     // algolia: {
     //   appId: process.env.ALGOLIA_APP_ID || "XXX",
     //   apiKey: process.env.ALGOLIA_API_KEY || "XXX",
-    //   indexName: "cortex",
+    //   indexName: "platform",
     //   contextualSearch: true,
     //   insights: true,
     // },
@@ -197,7 +197,7 @@ const config: Config = {
           "@type": "Organization",
           name: "Platform",
           url: "https://platform.menlo.ai/",
-          logo: "https://cortex.so/img/logos/cortex-logo.svg",
+          logo: "https://menlo.ai/img/logos/menlo-logo.svg",
         }),
       },
     ],
@@ -254,7 +254,7 @@ const config: Config = {
             },
             {
               label: "Twitter",
-              href: "https://x.com/cortex_so",
+              href: "https://x.com/menlo_ai",
             },
             {
               label: "Linkedin",
@@ -278,8 +278,8 @@ const config: Config = {
       ],
       logo: {
         alt: "Platform Logo",
-        src: "/img/logos/cortex-logo-mark.svg",
-        srcDark: "/img/logos/cortex-logo-mark.svg",
+        src: "/img/logos/menlo-logo-mark.svg",
+        srcDark: "/img/logos/menlo-logo-mark.svg",
         width: 34,
       },
       copyright: `Copyright © ${new Date().getFullYear()} Menlo. All rights reserved.`,
