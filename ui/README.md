@@ -34,14 +34,14 @@ cd ui/
 docker build -t litellm-ui:latest .
 
 # Run the container
-docker run -d --name litellm-ui -p 8080:80 litellm-ui:latest
+docker run -d --name litellm-ui -p 80:80 litellm-ui:latest
 ```
 
 ### 3. Access Applications
-- **Documentation**: http://localhost:8080/docs
-- **Dashboard**: http://localhost:8080/dashboard  
-- **Health Check**: http://localhost:8080/health
-- **Root**: http://localhost:8080/ (redirects to docs)
+- **Documentation**: http://localhost/docs
+- **Dashboard**: http://localhost/dashboard  
+- **Health Check**: http://localhost/health
+- **Root**: http://localhost/ (redirects to docs)
 
 ## 🛠️ Development Workflow
 
@@ -68,7 +68,7 @@ npm run dev  # Runs on http://localhost:3001
 
 ## 🏗️ Architecture
 
-### Frontend Container (`localhost:8080`)
+### Frontend Container (`localhost`)
 - **Nginx** serves static files
 - **Docs** built from Docusaurus → `/docs` route
 - **Dashboard** built from Next.js → `/dashboard` route
@@ -81,10 +81,10 @@ npm run dev  # Runs on http://localhost:3001
 
 ### URL Structure
 ```
-localhost:8080/              → Redirects to /docs
-localhost:8080/docs          → Documentation (Docusaurus)
-localhost:8080/dashboard     → Dashboard UI (Next.js)
-localhost:8080/health        → Health check endpoint
+localhost/              → Redirects to /docs
+localhost/docs          → Documentation (Docusaurus)
+localhost/dashboard     → Dashboard UI (Next.js)
+localhost/health        → Health check endpoint
 ```
 
 ## 🔧 Configuration
@@ -107,7 +107,7 @@ docker build --build-arg API_URL=https://api.yourdomain.com -t litellm-ui:prod .
 ### Health Checks
 ```bash
 # Frontend health
-curl http://localhost:8080/health
+curl http://localhost/health
 # Expected: "healthy"
 
 # Backend health (requires authentication)
@@ -118,16 +118,16 @@ curl http://localhost:4000/health
 ### Route Testing
 ```bash
 # Test redirects and routes
-curl -I http://localhost:8080/           # Should redirect to /docs
-curl -I http://localhost:8080/docs       # Should redirect to /docs/
-curl -I http://localhost:8080/docs/      # Should return 200 OK
-curl -I http://localhost:8080/dashboard  # Should redirect to /dashboard/
-curl -I http://localhost:8080/dashboard/ # Should return 200 OK
+curl -I http://localhost/           # Should redirect to /docs
+curl -I http://localhost/docs       # Should redirect to /docs/
+curl -I http://localhost/docs/      # Should return 200 OK
+curl -I http://localhost/dashboard  # Should redirect to /dashboard/
+curl -I http://localhost/dashboard/ # Should return 200 OK
 ```
 
 ### Browser Testing
-1. Visit http://localhost:8080/docs - Documentation should load
-2. Visit http://localhost:8080/dashboard - Dashboard should load and connect to backend
+1. Visit http://localhost/docs - Documentation should load
+2. Visit http://localhost/dashboard - Dashboard should load and connect to backend
 
 ## 🧹 Storage Management
 
@@ -171,10 +171,10 @@ docker rmi litellm-ui:latest
 
 # 3. Rebuild and test
 docker build -t litellm-ui:latest .
-docker run -d --name litellm-ui -p 8080:80 litellm-ui:latest
+docker run -d --name litellm-ui -p 80:80 litellm-ui:latest
 
 # 4. Test your changes
-curl http://localhost:8080/health
+curl http://localhost/health
 
 # 5. Repeat from step 1
 ```
