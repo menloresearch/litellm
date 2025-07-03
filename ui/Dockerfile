@@ -1,5 +1,5 @@
 # Stage 1: Build docs independently
-FROM node:18-alpine AS docs-builder
+FROM node:20-alpine AS docs-builder
 WORKDIR /app
 COPY docs/package*.json ./
 RUN npm ci --only=production
@@ -7,7 +7,7 @@ COPY docs/ ./
 RUN npm run build
 
 # Stage 2: Build dashboard independently
-FROM node:18-alpine AS dashboard-builder
+FROM node:20-alpine AS dashboard-builder
 WORKDIR /app
 COPY litellm-dashboard/package*.json ./
 RUN npm ci --only=production
