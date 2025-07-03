@@ -6,7 +6,6 @@ WORKDIR /app/docs
 COPY docs/package*.json ./
 RUN npm ci --only=production
 COPY docs/ ./
-ENV DOCUSAURUS_BASE_URL=/docs/
 RUN npm run build
 
 # Install dependencies and build dashboard, to change API_URL in prod. 

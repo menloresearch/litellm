@@ -22,7 +22,7 @@ ui/
 ### 1. Start Backend
 ```bash
 # In project root - start the LiteLLM backend
-litellm --config proxy_server_config.yaml
+litellm --config config.yaml
 # Backend will run on http://localhost:4000
 ```
 
@@ -48,7 +48,7 @@ docker run -d --name litellm-ui -p 8080:80 litellm-ui:latest
 ### Option 1: Development Servers (Fastest Iteration)
 ```bash
 # Terminal 1: Start backend
-litellm --config proxy_server_config.yaml
+litellm --config config.yaml
 
 # Terminal 2: Start docs dev server
 cd ui/docs
@@ -92,7 +92,6 @@ localhost:8080/health        → Health check endpoint
 ### Environment Variables (Build Time)
 - `API_URL`: Backend API endpoint (default: `http://localhost:4000`), need to change in prod
 - `UI_BASE_PATH`: Dashboard base path (default: `/dashboard`)
-- `DOCUSAURUS_BASE_URL`: Docs base path (default: `/docs/`)
 
 ### Custom Builds
 ```bash
