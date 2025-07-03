@@ -12,7 +12,6 @@ bun.lockb
 .aider*
 litellm_results.jsonl
 secrets.toml
-.gitignore
 litellm/proxy/litellm_secrets.toml
 litellm/proxy/api_log.json
 .idea/
@@ -32,7 +31,6 @@ litellm/tests/dynamo*.log
 .vscode/settings.json
 litellm/proxy/log.txt
 proxy_server_config_@.yaml
-.gitignore
 proxy_server_config_2.yaml
 litellm/proxy/secret_managers/credentials.json
 hosted_config.yaml
@@ -44,6 +42,7 @@ ui/litellm-dashboard/node_modules
 ui/litellm-dashboard/next-env.d.ts
 ui/litellm-dashboard/package.json
 ui/litellm-dashboard/package-lock.json
+ui/litellm-dashboard/out
 deploy/charts/litellm/*.tgz
 deploy/charts/litellm/charts/*
 deploy/charts/*.tgz
@@ -59,6 +58,7 @@ litellm/proxy/_super_secret_config.yaml
 litellm/proxy/myenv/bin/activate
 litellm/proxy/myenv/bin/Activate.ps1
 myenv/*
+litellm/proxy/_experimental/out/
 litellm/proxy/_experimental/out/404/index.html
 litellm/proxy/_experimental/out/model_hub/index.html
 litellm/proxy/_experimental/out/onboarding/index.html
