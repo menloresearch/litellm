@@ -202,7 +202,8 @@ const config: Config = {
       },
     ],
 
-    image: "img/social-card.jpg",
+    // TODO: add social card image
+    // image: "img/social-card.jpg",
     navbar: {
       logo: {
         alt: "Menlo Logo",
