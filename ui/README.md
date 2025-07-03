@@ -90,7 +90,7 @@ localhost:8080/health        → Health check endpoint
 ## 🔧 Configuration
 
 ### Environment Variables (Build Time)
-- `API_URL`: Backend API endpoint (default: `http://localhost:4000`)
+- `API_URL`: Backend API endpoint (default: `http://localhost:4000`), need to change in prod
 - `UI_BASE_PATH`: Dashboard base path (default: `/dashboard`)
 - `DOCUSAURUS_BASE_URL`: Docs base path (default: `/docs/`)
 

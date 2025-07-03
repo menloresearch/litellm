@@ -9,7 +9,7 @@ COPY docs/ ./
 ENV DOCUSAURUS_BASE_URL=/docs/
 RUN npm run build
 
-# Install dependencies and build dashboard
+# Install dependencies and build dashboard, to change API_URL in prod. 
 WORKDIR /app/dashboard
 COPY litellm-dashboard/package*.json ./
 RUN npm ci --only=production
